@@ -1,0 +1,8 @@
+Bir şubeyi silmeden önce herhangi bir araba bulundurduğunu kontrol eden bir fonksiyon yok.
+Aynı sorun sigorta sisteminde de var.
+Rezervasyonun süresini dolup dolmadığını kontrol eden bir fonksiyon.
+Bir müşteri başkasının rezervasyonun iptal edebilir.
+Rezervasyon iptal edildikten sonra araç hala rezerve durumunda kalıyor.
+Tarih kontrolü yok.
+Bir müşteri bir aracı o şubede olmasa bile o şubeden alacak şekilde rezervasyon yapabiliyor.
+

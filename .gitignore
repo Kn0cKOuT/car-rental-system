@@ -1,0 +1,10 @@
+# Node.js
+node_modules/
+.env
+logs/
+*.log
+
+# System/editor junk
+.DS_Store
+.vscode/
+.idea/

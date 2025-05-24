@@ -27,16 +27,30 @@ router.post('/register/customer', async(req, res) => {
     const {username, password, firstName, lastName, email, phone, driverLicenseNo, creditCardNumber, expDate, cvv} = req.body;
 
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const sql = `
-            INSERT INTO Customer 
-            (Username, Password, FirstName, LastName, Email, Phone, DriverLicenseNo, CreditCardNumber, ExpDate, CVV)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `; 
-
-        db.query(sql, [username, hashedPassword, firstName, lastName, email, phone, driverLicenseNo, creditCardNumber, expDate, cvv], (err, result) => {
+    
+        db.query(`SELECT * FROM Customer WHERE Username = ?`, [username], (err, customerResult) => {
             if (err) return res.status(500).json({ error: err });
-            res.status(201).json({ message: "Customer registered" });
+
+            db.query(`SELECT * FROM Admin WHERE Username = ?`, [username], (err2, adminResult) => {
+                if (err2) return res.status(500).json({ error: err2 });
+
+                if (customerResult.length > 0 || adminResult.length > 0) {
+                    return res.status(400).json({ error: "Username already exists" });
+                }
+
+                bcrypt.hash(password, 10).then(hashedPassword => {
+                    const sql = `
+                        INSERT INTO Customer 
+                        (Username, Password, FirstName, LastName, Email, Phone, DriverLicenseNo, CreditCardNumber, ExpDate, CVV)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    `; 
+
+                    db.query(sql, [username, hashedPassword, firstName, lastName, email, phone, driverLicenseNo, creditCardNumber, expDate, cvv], (err, result) => {
+                        if (err) return res.status(500).json({ error: err });
+                        res.status(201).json({ message: "Customer registered" });
+                    });
+                });
+            });
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -47,16 +61,30 @@ router.post('/register/admin', async(req, res) => {
     const {username, password} = req.body;
 
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const sql = `
-            INSERT INTO Admin 
-            (Username, Password) 
-            VALUES (?, ?)
-        `;
-
-        db.query(sql, [username, hashedPassword], (err, result) => {
+        
+        db.query(`SELECT * FROM Customer WHERE Username = ?`, [username], (err, customerResult) => {
             if (err) return res.status(500).json({ error: err });
-            res.status(201).json({ message: "Admin registered" });
+
+            db.query(`SELECT * FROM Admin WHERE Username = ?`, [username], (err2, adminResult) => {
+                if (err2) return res.status(500).json({ error: err2 });
+
+                if (customerResult.length > 0 || adminResult.length > 0) {
+                    return res.status(400).json({ error: "Username already exists" });
+                }
+
+                bcrypt.hash(password, 10).then(hashedPassword => {
+                    const sql = `
+                        INSERT INTO Admin 
+                        (Username, Password) 
+                        VALUES (?, ?)
+                    `;
+
+                    db.query(sql, [username, hashedPassword], (err, result) => {
+                        if (err) return res.status(500).json({ error: err });
+                        res.status(201).json({ message: "Admin registered" });
+                    });
+                });
+            });
         });
     } catch (err) {
         res.status(500).json({error: err.message});
@@ -119,5 +147,23 @@ router.post('/login', (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+router.get("/check-username", (req, res) => {
+  const username = req.query.username;
+  if (!username) return res.status(400).json({ error: "Username is required" });
+
+  db.query(`
+    SELECT Username FROM Customer WHERE Username = ? 
+    UNION 
+    SELECT Username FROM Admin WHERE Username = ?`,
+    [username, username],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err });
+      if (result.length > 0) return res.json({ available: false });
+      return res.json({ available: true });
+    }
+  );
+});
+
 
 module.exports = router; 

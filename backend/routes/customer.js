@@ -1,8 +1,7 @@
-const express = require('express');
+ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const { allowRoles } = require('../middleware/authMiddleware');
-
 
 router.get('/reservations/:id', allowRoles('customer'), (req, res) => {
     const customerId = req.params.id;
@@ -16,7 +15,6 @@ router.get('/reservations/:id', allowRoles('customer'), (req, res) => {
         res.json(result);
     });
 });
-
 
 router.post('/reserve', allowRoles('customer'), (req, res) => {
     const { carId, customerId, startDate, endDate, pickupBranchId, returnBranchId, packageId } = req.body;
@@ -42,9 +40,10 @@ router.post('/reserve', allowRoles('customer'), (req, res) => {
         }
 
         const carQuery = `
-        SELECT Status, DailyRate 
-        FROM Car 
-        WHERE CarID = ?`;
+            SELECT Status, DailyRate, BranchID 
+            FROM Car 
+            WHERE CarID = ?
+        `;
         db.query(carQuery, [carId], (err, carResult) => {
             if (err || carResult.length === 0) {
                 return res.status(500).json({ error: "Car not found." });
@@ -54,12 +53,18 @@ router.post('/reserve', allowRoles('customer'), (req, res) => {
                 return res.status(400).json({ error: "Car is not available." });
             }
 
+            if (carResult[0].BranchID !== pickupBranchId) {
+                return res.status(400).json({ error: "Car is not available at the selected pickup branch." });
+            }
+
             const carRate = Number(carResult[0].DailyRate);
 
             const insQuery = `
-            SELECT DailyCost 
-            FROM Insurance 
-            WHERE PackageID = ?`;
+                SELECT DailyCost 
+                FROM Insurance 
+                WHERE PackageID = ?
+            `;
+
             db.query(insQuery, [packageId], (err, insResult) => {
                 if (err || insResult.length === 0) {
                     return res.status(500).json({ error: "Insurance package not found." });
@@ -88,9 +93,9 @@ router.post('/reserve', allowRoles('customer'), (req, res) => {
                     if (err) return res.status(500).json({ error: err });
 
                     const updateCarStatus = `
-                    UPDATE Car
-                    SET Status = 'reserved' 
-                    WHERE CarID = ?
+                        UPDATE Car
+                        SET Status = 'reserved' 
+                        WHERE CarID = ?
                     `;
                     db.query(updateCarStatus, [carId], (err, result2) => {
                         if (err) return res.status(500).json({ error: "Reservation saved, but failed to update car status." });
@@ -107,21 +112,54 @@ router.post('/reserve', allowRoles('customer'), (req, res) => {
 
 router.delete('/reservations/:id', allowRoles('customer'), (req, res) => {
     const reservationId = req.params.id;
+    const customerId = req.user.id;
 
-    const sql = `
-    DELETE
-    FROM Reservation 
-    WHERE ReservationID = ?`;
-    db.query(sql, [reservationId], (err, result) => {
-        if (err) { 
+    const checkOwnershipQuery = `
+        SELECT CarID 
+        FROM Reservation 
+        WHERE ReservationID = ? AND CustomerID = ?
+    `;
+    
+    db.query(checkOwnershipQuery, [reservationId, customerId], (err, result) => {
+        if (err) {
             return res.status(500).json({ error: err });
         }
-
-        if(result.affectedRows === 0){
-            return res.status(404).json({ error: "Reservation not found." })
+        
+        if (result.length === 0) {
+            return res.status(403).json({ error: "You are not authorized to delete this reservation." });
         }
+        
+        const carId = result[0].CarID;
+        
+        const deleteQuery = `
+            DELETE
+            FROM Reservation 
+            WHERE ReservationID = ?
+        `;
+        
+        db.query(deleteQuery, [reservationId], (err, deleteResult) => {
+            if (err) { 
+                return res.status(500).json({ error: err });
+            }
 
-        res.json({ message: "Reservation deleted"});
+            if(deleteResult.affectedRows === 0){
+                return res.status(404).json({ error: "Reservation not found." });
+            }
+
+            const updateCarStatus = `
+                UPDATE Car
+                SET Status = 'available'
+                WHERE CarID = ?
+            `;
+            
+            db.query(updateCarStatus, [carId], (err, updateResult) => {
+                if (err) {
+                    return res.status(500).json({ error: "Reservation deleted but failed to update car status." });
+                }
+                
+                res.json({ message: "Reservation deleted and car marked as available" });
+            });
+        });
     });
 });
 
@@ -142,9 +180,18 @@ router.get('/branches', allowRoles('customer'), (req, res) => {
 
 router.get('/cars', allowRoles('customer'), (req, res) => {
     const sql = `
-        SELECT *
-        FROM CAR
-        ORDER BY CarID;
+        SELECT 
+            c.CarID, 
+            c.Model, 
+            c.Year, 
+            c.DailyRate, 
+            c.Status, 
+            c.BranchID, 
+            DATE_FORMAT(r.StartDate, '%Y-%m-%d') as StartDate, 
+            DATE_FORMAT(r.EndDate, '%Y-%m-%d') as EndDate
+        FROM CAR AS c
+        LEFT JOIN Reservation AS r ON c.CarID = r.CarID
+        ORDER BY c.CarID, r.StartDate;
     `;
 
     db.query(sql, (err, result) => {

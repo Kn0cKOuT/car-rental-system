@@ -1,4 +1,4 @@
-const express = require('express');
+ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const { allowRoles } = require('../middleware/authMiddleware');
@@ -85,7 +85,7 @@ router.post('/branches', allowRoles('admin'), (req, res) => {
     });
 });
 
-router.delete('/branches/:id', allowRoles('admin'), (req, res) => { // There will be an error when deleting a branch that includes cars.
+router.delete('/branches/:id', allowRoles('admin'), (req, res) => {
     const branchId = req.params.id;
 
     const sql=`
@@ -108,9 +108,10 @@ router.delete('/branches/:id', allowRoles('admin'), (req, res) => { // There wil
 
 router.get('/cars', allowRoles('admin'), (req, res) => {
     const sql = `
-        SELECT *
-        FROM CAR
-        ORDER BY CarID;
+        SELECT c.CarID, c.Model, c.Year, c.DailyRate, c.Status, C.BranchID, r.StartDate, r.EndDate
+        FROM CAR AS c
+        LEFT JOIN Reservation AS r ON c.CarID = r.CarID
+        ORDER BY c.CarID, r.StartDate;
     `;
 
     db.query(sql, (err, result) => {
@@ -193,7 +194,7 @@ router.post('/packages', allowRoles('admin'), (req, res) => {
     });
 });
 
-router.delete('/packages/:id', allowRoles('admin'), (req, res) => {  // There will be an error when deleting a package.
+router.delete('/packages/:id', allowRoles('admin'), (req, res) => {
     const packageId = req.params.id;
 
     const sql=`
@@ -214,5 +215,29 @@ router.delete('/packages/:id', allowRoles('admin'), (req, res) => {  // There wi
     });
 });
 
+router.put('/cars/:id/status', allowRoles('admin'), (req, res) => {
+    const carId = req.params.id;
+    const { status } = req.body;
+
+    if (!['available', 'maintenance', 'not_available'].includes(status)) {
+        return res.status(400).json({ error: "Invalid status. Must be 'available', 'maintenance', or 'not_available'" });
+    }
+
+    const sql = `
+        UPDATE Car 
+        SET Status = ? 
+        WHERE CarID = ?
+    `;
+
+    db.query(sql, [status, carId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Car not found" });
+        }
+        res.json({ message: "Car status updated successfully" });
+    });
+});
 
 module.exports = router;

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { authAPI } from "../config/api";
-import AdminDashboard from "./AdminDashboard";
-import CustomerDashboard from "./CustomerDashboard";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import CustomerDashboard from "../pages/customer/CustomerDashboard";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -12,6 +12,11 @@ const Login = () => {
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.removeItem("role");
+    localStorage.removeItem("token");
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,10 +36,12 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
+      window.dispatchEvent(new Event("storage"));
+
       if (role === "admin") {
-        navigate("/AdminDashboard");
+        navigate("/admin/AdminDashboard");
       } else {
-        navigate("/CustomerDashboard");
+        navigate("/customer/CustomerDashboard");
       }
     } catch (err: any) {
       const msg = err.response?.data?.error || "Login failed";

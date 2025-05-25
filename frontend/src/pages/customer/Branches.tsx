@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
 import useAuthGuard from "../../hooks/authGuard";
+import { useNavigate } from "react-router-dom";
 
 const Branches = () => {
   useAuthGuard("customer");
+  const navigate = useNavigate();
 
   type Branch = {
     BranchID: number;
@@ -58,13 +60,44 @@ const Branches = () => {
   };
 
   return (
-    <div style={{ padding: "0 50px" }}>
+    <div
+      style={{
+        padding: "20px 50px",
+        backgroundColor: "#ecf0f1",
+        minHeight: "100vh",
+      }}
+    >
+      <button
+        onClick={() => navigate("/customer/CustomerDashboard")}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "20px",
+          padding: "8px 15px",
+          backgroundColor: "#3498db",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "14px",
+          transition: "background-color 0.3s ease",
+          zIndex: 1000,
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#2980b9")}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#3498db")}
+      >
+        Back to Dashboard
+      </button>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "20px",
+          marginBottom: "30px",
+          padding: "20px",
+          backgroundColor: "#1e3a5f",
+          borderRadius: "8px",
+          color: "#ffffff",
         }}
       >
         <h1>Branches</h1>
@@ -88,12 +121,13 @@ const Branches = () => {
           <div
             style={{
               backgroundColor: "white",
-              padding: "20px",
+              padding: "30px",
               borderRadius: "8px",
               width: "80%",
-              maxWidth: "1000px",
+              maxWidth: "1200px",
               maxHeight: "80vh",
               overflow: "auto",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
             }}
           >
             <div
@@ -104,86 +138,119 @@ const Branches = () => {
                 marginBottom: "20px",
               }}
             >
-              <h2>Cars at {selectedBranch.Name}</h2>
+              <h2 style={{ color: "#1e3a5f" }}>
+                Cars at {selectedBranch.Name}
+              </h2>
               <button
                 onClick={() => setIsCarsModalOpen(false)}
                 style={{
                   padding: "8px 16px",
-                  backgroundColor: "#f44336",
+                  backgroundColor: "#e74c3c",
                   color: "white",
                   border: "none",
                   borderRadius: "4px",
                   cursor: "pointer",
+                  transition: "all 0.3s ease",
                 }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#c0392b")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#e74c3c")
+                }
               >
                 Close
               </button>
             </div>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ backgroundColor: "#9beeff" }}>
-                  <th style={cellStyle}>Car ID</th>
-                  <th style={cellStyle}>Brand</th>
-                  <th style={cellStyle}>Model</th>
-                  <th style={cellStyle}>Year</th>
-                  <th style={cellStyle}>Transmission</th>
-                  <th style={cellStyle}>Fuel</th>
-                  <th style={cellStyle}>Passengers</th>
-                  <th style={cellStyle}>Daily Rate</th>
-                  <th style={cellStyle}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {branchCars.map((car) => (
-                  <tr key={car.CarID}>
-                    <td style={cellStyle}>{car.CarID}</td>
-                    <td style={cellStyle}>{car.Brand}</td>
-                    <td style={cellStyle}>{car.Model}</td>
-                    <td style={cellStyle}>{car.Year}</td>
-                    <td style={cellStyle}>{car.Transmission}</td>
-                    <td style={cellStyle}>{car.Fuel}</td>
-                    <td style={cellStyle}>{car.Passengers}</td>
-                    <td style={cellStyle}>${car.DailyRate}</td>
-                    <td style={cellStyle}>{car.Status}</td>
+            <div style={{ overflowX: "auto" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  backgroundColor: "#ffffff",
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th style={tableHeaderStyle}>Car ID</th>
+                    <th style={tableHeaderStyle}>Brand</th>
+                    <th style={tableHeaderStyle}>Model</th>
+                    <th style={tableHeaderStyle}>Year</th>
+                    <th style={tableHeaderStyle}>Transmission</th>
+                    <th style={tableHeaderStyle}>Fuel</th>
+                    <th style={tableHeaderStyle}>Passengers</th>
+                    <th style={tableHeaderStyle}>Daily Rate</th>
+                    <th style={tableHeaderStyle}>Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {branchCars.map((car) => (
+                    <tr key={car.CarID}>
+                      <td style={tableCellStyle}>{car.CarID}</td>
+                      <td style={tableCellStyle}>{car.Brand}</td>
+                      <td style={tableCellStyle}>{car.Model}</td>
+                      <td style={tableCellStyle}>{car.Year}</td>
+                      <td style={tableCellStyle}>{car.Transmission}</td>
+                      <td style={tableCellStyle}>{car.Fuel}</td>
+                      <td style={tableCellStyle}>{car.Passengers}</td>
+                      <td style={tableCellStyle}>${car.DailyRate}</td>
+                      <td style={tableCellStyle}>{car.Status}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
       <table
-        style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          backgroundColor: "#ffffff",
+          borderRadius: "8px",
+          overflow: "hidden",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        }}
       >
         <thead>
-          <tr style={{ backgroundColor: "#9beeff" }}>
-            <th style={cellStyle}>Branch ID</th>
-            <th style={cellStyle}>Name</th>
-            <th style={cellStyle}>Phone</th>
-            <th style={cellStyle}>Address</th>
-            <th style={cellStyle}></th>
+          <tr>
+            <th style={tableHeaderStyle}>Branch ID</th>
+            <th style={tableHeaderStyle}>Name</th>
+            <th style={tableHeaderStyle}>Phone</th>
+            <th style={tableHeaderStyle}>Address</th>
+            <th style={tableHeaderStyle}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {branches.map((res: any) => (
-            <tr key={res.BranchID}>
-              <td style={cellStyle}>{res.BranchID}</td>
-              <td style={cellStyle}>{res.Name}</td>
-              <td style={cellStyle}>{res.Phone}</td>
-              <td style={cellStyle}>{res.Address}</td>
-              <td style={cellStyle}>
+          {branches.map((branch) => (
+            <tr key={branch.BranchID}>
+              <td style={tableCellStyle}>{branch.BranchID}</td>
+              <td style={tableCellStyle}>{branch.Name}</td>
+              <td style={tableCellStyle}>{branch.Phone}</td>
+              <td style={tableCellStyle}>{branch.Address}</td>
+              <td style={tableCellStyle}>
                 <button
-                  onClick={() => handleViewCars(res)}
+                  onClick={() => handleViewCars(branch)}
                   style={{
-                    padding: "5px 10px",
-                    backgroundColor: "#2196F3",
+                    padding: "8px 12px",
+                    backgroundColor: "#3498db",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
                     cursor: "pointer",
-                    marginRight: "10px",
+                    transition: "all 0.3s ease",
                   }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#2980b9")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#3498db")
+                  }
                 >
                   View Cars
                 </button>
@@ -196,9 +263,19 @@ const Branches = () => {
   );
 };
 
-const cellStyle: React.CSSProperties = {
-  padding: "10px",
-  border: "1px solid black",
+const tableHeaderStyle: React.CSSProperties = {
+  backgroundColor: "#2c3e50",
+  color: "#ffffff",
+  padding: "15px",
+  textAlign: "center",
+  borderBottom: "2px solid #1e3a5f",
+};
+
+const tableCellStyle: React.CSSProperties = {
+  padding: "12px 15px",
+  borderBottom: "1px solid #ecf0f1",
+  color: "#2c3e50",
+  textAlign: "center",
 };
 
 export default Branches;

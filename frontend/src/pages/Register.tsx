@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { authAPI } from "../config/api";
-
+import { useNavigate } from "react-router-dom";
+// register sonra login ekranına yönlendirir
 const Register = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -25,6 +26,8 @@ const Register = () => {
     cvv: "",
   });
 
+  const navigate = useNavigate();
+
   const checkUsernameAvailability = async (username: string) => {
     if (!username) return false;
 
@@ -47,6 +50,21 @@ const Register = () => {
   const formatPhoneNumber = (value: string) => {
     const noSpaces = value.replace(/\s/g, "");
     return noSpaces.slice(0, 10);
+  };
+
+  const formatExpDate = (value: string) => {
+    const cleanValue = value.replace("/", "");
+    const limitedValue = cleanValue.slice(0, 4);
+
+    if (limitedValue.length <= 2) {
+      return limitedValue;
+    } else {
+      return `${limitedValue.slice(0, 2)}/${limitedValue.slice(2)}`;
+    }
+  };
+
+  const formatCVV = (value: string) => {
+    return value.slice(0, 3);
   };
 
   const validateForm = () => {
@@ -93,7 +111,7 @@ const Register = () => {
     }
 
     if (formData.cvv && !/^\d{3,4}$/.test(formData.cvv)) {
-      tempErrors.cvv = "CVV must be 3 or 4 digits";
+      tempErrors.cvv = "CVV must be 3 digits";
       isValid = false;
     }
 
@@ -110,11 +128,16 @@ const Register = () => {
     } else if (name === "phone") {
       const formattedValue = formatPhoneNumber(value);
       setFormData({ ...formData, [name]: formattedValue });
+    } else if (name === "expDate") {
+      const formattedValue = formatExpDate(value);
+      setFormData({ ...formData, [name]: formattedValue });
+    } else if (name === "cvv") {
+      const formattedValue = formatCVV(value);
+      setFormData({ ...formData, [name]: formattedValue });
     } else {
       setFormData({ ...formData, [name]: value });
     }
 
-    // Clear error when user starts typing
     setErrors({ ...errors, [name]: "" });
   };
 
@@ -148,19 +171,40 @@ const Register = () => {
       style={{
         minHeight: "100vh",
         backgroundColor: "#ecf0f1",
-        padding: "40px 20px",
+        padding: "20px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        position: "relative",
       }}
     >
+      <button
+        onClick={() => navigate("/")}
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          padding: "8px 15px",
+          backgroundColor: "#1e3a5f",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "14px",
+          transition: "background-color 0.3s ease",
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#152a45")}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#1e3a5f")}
+      >
+        Back to Home
+      </button>
       <div
         style={{
-          maxWidth: "800px",
+          maxWidth: "600px",
           width: "100%",
           backgroundColor: "#ffffff",
-          padding: "40px",
-          borderRadius: "10px",
+          padding: "25px",
+          borderRadius: "8px",
           boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
         }}
       >
@@ -168,8 +212,8 @@ const Register = () => {
           style={{
             textAlign: "center",
             color: "#1e3a5f",
-            marginBottom: "30px",
-            fontSize: "2.5rem",
+            marginBottom: "20px",
+            fontSize: "2rem",
           }}
         >
           Register
@@ -179,17 +223,19 @@ const Register = () => {
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: "30px",
-              marginBottom: "30px",
+              gap: "25px",
+              marginBottom: "20px",
+              maxWidth: "500px",
+              margin: "0 auto",
             }}
           >
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 Username
@@ -202,10 +248,10 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
@@ -213,8 +259,8 @@ const Register = () => {
                 <div
                   style={{
                     color: "#e74c3c",
-                    fontSize: "12px",
-                    marginTop: "8px",
+                    fontSize: "11px",
+                    marginTop: "4px",
                   }}
                 >
                   {errors.username}
@@ -222,13 +268,13 @@ const Register = () => {
               )}
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 Password
@@ -241,10 +287,10 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
@@ -252,8 +298,8 @@ const Register = () => {
                 <div
                   style={{
                     color: "#e74c3c",
-                    fontSize: "12px",
-                    marginTop: "8px",
+                    fontSize: "11px",
+                    marginTop: "4px",
                   }}
                 >
                   {errors.password}
@@ -261,13 +307,13 @@ const Register = () => {
               )}
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 First Name
@@ -280,22 +326,22 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 Last Name
@@ -308,22 +354,22 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 Email
@@ -336,10 +382,10 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
@@ -347,8 +393,8 @@ const Register = () => {
                 <div
                   style={{
                     color: "#e74c3c",
-                    fontSize: "12px",
-                    marginTop: "8px",
+                    fontSize: "11px",
+                    marginTop: "4px",
                   }}
                 >
                   {errors.email}
@@ -356,13 +402,13 @@ const Register = () => {
               )}
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 Phone
@@ -376,10 +422,10 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
@@ -387,8 +433,8 @@ const Register = () => {
                 <div
                   style={{
                     color: "#e74c3c",
-                    fontSize: "12px",
-                    marginTop: "8px",
+                    fontSize: "11px",
+                    marginTop: "4px",
                   }}
                 >
                   {errors.phone}
@@ -396,13 +442,13 @@ const Register = () => {
               )}
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 Driver License No
@@ -415,22 +461,22 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 Credit Card Number
@@ -445,10 +491,10 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
@@ -456,8 +502,8 @@ const Register = () => {
                 <div
                   style={{
                     color: "#e74c3c",
-                    fontSize: "12px",
-                    marginTop: "8px",
+                    fontSize: "11px",
+                    marginTop: "4px",
                   }}
                 >
                   {errors.creditCardNumber}
@@ -465,13 +511,13 @@ const Register = () => {
               )}
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 Expiration Date
@@ -485,10 +531,10 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
@@ -496,8 +542,8 @@ const Register = () => {
                 <div
                   style={{
                     color: "#e74c3c",
-                    fontSize: "12px",
-                    marginTop: "8px",
+                    fontSize: "11px",
+                    marginTop: "4px",
                   }}
                 >
                   {errors.expDate}
@@ -505,13 +551,13 @@ const Register = () => {
               )}
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "15px" }}>
               <label
                 style={{
                   color: "#7f8c8d",
                   display: "block",
-                  marginBottom: "8px",
-                  fontSize: "14px",
+                  marginBottom: "4px",
+                  fontSize: "13px",
                 }}
               >
                 CVV
@@ -524,10 +570,10 @@ const Register = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
+                  padding: "8px",
+                  borderRadius: "4px",
                   border: "1px solid #7f8c8d",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "#2c3e50",
                 }}
               />
@@ -535,8 +581,8 @@ const Register = () => {
                 <div
                   style={{
                     color: "#e74c3c",
-                    fontSize: "12px",
-                    marginTop: "8px",
+                    fontSize: "11px",
+                    marginTop: "4px",
                   }}
                 >
                   {errors.cvv}
@@ -545,16 +591,16 @@ const Register = () => {
             </div>
           </div>
 
-          <div style={{ marginTop: "30px", textAlign: "center" }}>
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
             <button
               type="submit"
               style={{
-                padding: "15px 30px",
-                fontSize: "1.1rem",
+                padding: "10px 25px",
+                fontSize: "1rem",
                 backgroundColor: "#1e3a5f",
                 color: "#ffffff",
                 border: "none",
-                borderRadius: "5px",
+                borderRadius: "4px",
                 cursor: "pointer",
                 transition: "background-color 0.3s ease",
               }}
@@ -569,6 +615,29 @@ const Register = () => {
             </button>
           </div>
         </form>
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+            fontSize: "14px",
+            color: "#2c3e50",
+          }}
+        >
+          Already have an account?{" "}
+          <button
+            onClick={() => navigate("/login")}
+            style={{
+              color: "#3498db",
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              fontSize: "13px",
+              fontWeight: "bold",
+            }}
+          >
+            Login
+          </button>
+        </p>
       </div>
     </div>
   );

@@ -66,6 +66,26 @@ const Login = () => {
         bottom: 0,
       }}
     >
+      <button
+        onClick={() => navigate("/")}
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          padding: "8px 15px",
+          backgroundColor: "#1e3a5f",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "14px",
+          transition: "background-color 0.3s ease",
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#152a45")}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#1e3a5f")}
+      >
+        Back to Home
+      </button>
       <div
         style={{
           backgroundColor: "#ffffff",

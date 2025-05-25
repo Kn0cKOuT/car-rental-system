@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
 import useAuthGuard from "../../hooks/authGuard";
+import { useNavigate } from "react-router-dom";
 
 const ManageCars = () => {
   useAuthGuard("admin");
@@ -169,96 +170,243 @@ const ManageCars = () => {
     }
   };
 
+  const styles = {
+    container: {
+      padding: "20px 50px",
+      backgroundColor: "#ecf0f1",
+      minHeight: "100vh",
+    } as React.CSSProperties,
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "30px",
+      padding: "20px",
+      backgroundColor: "#1e3a5f",
+      borderRadius: "8px",
+      color: "#ffffff",
+    } as React.CSSProperties,
+    addButton: {
+      padding: "10px 20px",
+      backgroundColor: "#27ae60",
+      color: "#ffffff",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+    } as React.CSSProperties,
+    table: {
+      width: "100%",
+      borderCollapse: "collapse",
+      backgroundColor: "#ffffff",
+      borderRadius: "8px",
+      overflow: "hidden",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    } as React.CSSProperties,
+    tableHeader: {
+      backgroundColor: "#2c3e50",
+      color: "#ffffff",
+      padding: "15px",
+      textAlign: "center" as const,
+      borderBottom: "2px solid #1e3a5f",
+    } as React.CSSProperties,
+    tableCell: {
+      padding: "12px 15px",
+      borderBottom: "1px solid #ecf0f1",
+      color: "#2c3e50",
+      textAlign: "center" as const,
+    } as React.CSSProperties,
+    tableRow: {
+      "&:hover": {
+        backgroundColor: "#f5f6f7",
+      },
+    } as React.CSSProperties,
+    actionButton: {
+      padding: "8px 12px",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      marginRight: "8px",
+      transition: "all 0.3s ease",
+    } as React.CSSProperties,
+    viewButton: {
+      backgroundColor: "#3498db",
+      color: "#ffffff",
+    } as React.CSSProperties,
+    deleteButton: {
+      backgroundColor: "#e74c3c",
+      color: "#ffffff",
+    } as React.CSSProperties,
+    modal: {
+      position: "fixed" as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0,0,0,0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000,
+    } as React.CSSProperties,
+    modalContent: {
+      backgroundColor: "#ffffff",
+      padding: "30px",
+      borderRadius: "8px",
+      width: "80%",
+      maxWidth: "1200px",
+      maxHeight: "80vh",
+      overflow: "auto",
+      boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    } as React.CSSProperties,
+    modalHeader: {
+      color: "#1e3a5f",
+      marginBottom: "20px",
+    } as React.CSSProperties,
+    inputGroup: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      marginBottom: "15px",
+    } as React.CSSProperties,
+    label: {
+      width: "100px",
+      textAlign: "right" as const,
+      color: "#2c3e50",
+    } as React.CSSProperties,
+    input: {
+      padding: "8px 12px",
+      borderRadius: "4px",
+      border: "1px solid #7f8c8d",
+      fontSize: "14px",
+      flex: 1,
+    } as React.CSSProperties,
+    select: {
+      padding: "8px 12px",
+      borderRadius: "4px",
+      border: "1px solid #7f8c8d",
+      fontSize: "14px",
+      flex: 1,
+      backgroundColor: "#ffffff",
+    } as React.CSSProperties,
+    modalButtons: {
+      display: "flex",
+      gap: "10px",
+      justifyContent: "flex-end",
+      marginTop: "20px",
+    } as React.CSSProperties,
+    cancelButton: {
+      padding: "8px 16px",
+      backgroundColor: "#7f8c8d",
+      color: "#ffffff",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+    } as React.CSSProperties,
+    submitButton: {
+      padding: "8px 16px",
+      backgroundColor: "#27ae60",
+      color: "#ffffff",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+    } as React.CSSProperties,
+    modalTable: {
+      width: "100%",
+      borderCollapse: "collapse",
+      backgroundColor: "#ffffff",
+      borderRadius: "8px",
+      overflow: "hidden",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+      tableLayout: "fixed" as const,
+    } as React.CSSProperties,
+    modalTableHeader: {
+      backgroundColor: "#2c3e50",
+      color: "#ffffff",
+      padding: "12px",
+      textAlign: "center" as const,
+      borderBottom: "2px solid #1e3a5f",
+      position: "sticky" as const,
+      top: 0,
+      zIndex: 1,
+    } as React.CSSProperties,
+    modalTableCell: {
+      padding: "10px 12px",
+      borderBottom: "1px solid #ecf0f1",
+      color: "#2c3e50",
+      whiteSpace: "nowrap" as const,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      textAlign: "center" as const,
+    } as React.CSSProperties,
+  };
+
+  const navigate = useNavigate();
+
   return (
-    <div style={{ padding: "0 50px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
+    <div style={styles.container}>
+      <div style={styles.header}>
         <h1>Manage Cars</h1>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
+        <button onClick={() => setIsModalOpen(true)} style={styles.addButton}>
           Add New Car
         </button>
       </div>
 
+      <button
+        onClick={() => navigate("/admin/AdminDashboard")}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "20px",
+          padding: "8px 15px",
+          backgroundColor: "#3498db",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "14px",
+          transition: "background-color 0.3s ease",
+          zIndex: 1000,
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#2980b9")}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#3498db")}
+      >
+        Back to Dashboard
+      </button>
+
       {isModalOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              width: "400px",
-              maxWidth: "90%",
-            }}
-          >
-            <h2>Add New Car</h2>
+        <div style={styles.modal}>
+          <div style={styles.modalContent}>
+            <h2 style={styles.modalHeader}>Add New Car</h2>
             <div
               style={{ display: "flex", flexDirection: "column", gap: "15px" }}
             >
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <label style={{ width: "100px", textAlign: "right" }}>
-                  Brand:
-                </label>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Brand:</label>
                 <input
                   type="text"
                   value={newCar.Brand}
                   onChange={(e) =>
                     setNewCar((prev) => ({ ...prev, Brand: e.target.value }))
                   }
-                  style={inputStyle}
+                  style={styles.input}
                 />
               </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <label style={{ width: "100px", textAlign: "right" }}>
-                  Model:
-                </label>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Model:</label>
                 <input
                   type="text"
                   value={newCar.Model}
                   onChange={(e) =>
                     setNewCar((prev) => ({ ...prev, Model: e.target.value }))
                   }
-                  style={inputStyle}
+                  style={styles.input}
                 />
               </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <label style={{ width: "100px", textAlign: "right" }}>
-                  Year:
-                </label>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Year:</label>
                 <input
                   type="number"
                   value={newCar.Year ?? ""}
@@ -270,15 +418,11 @@ const ManageCars = () => {
                         : null,
                     }))
                   }
-                  style={inputStyle}
+                  style={styles.input}
                 />
               </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <label style={{ width: "100px", textAlign: "right" }}>
-                  Transmission:
-                </label>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Transmission:</label>
                 <select
                   value={newCar.Transmission}
                   onChange={(e) =>
@@ -287,24 +431,20 @@ const ManageCars = () => {
                       Transmission: e.target.value,
                     }))
                   }
-                  style={inputStyle}
+                  style={styles.select}
                 >
                   <option value="Automatic">Automatic</option>
                   <option value="Manual">Manual</option>
                 </select>
               </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <label style={{ width: "100px", textAlign: "right" }}>
-                  Fuel Type:
-                </label>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Fuel Type:</label>
                 <select
                   value={newCar.Fuel}
                   onChange={(e) =>
                     setNewCar((prev) => ({ ...prev, Fuel: e.target.value }))
                   }
-                  style={inputStyle}
+                  style={styles.select}
                 >
                   <option value="Gasoline">Gasoline</option>
                   <option value="Diesel">Diesel</option>
@@ -312,12 +452,8 @@ const ManageCars = () => {
                   <option value="Hybrid">Hybrid</option>
                 </select>
               </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <label style={{ width: "100px", textAlign: "right" }}>
-                  Passengers:
-                </label>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Passengers:</label>
                 <input
                   type="number"
                   value={newCar.Passengers ?? ""}
@@ -329,15 +465,11 @@ const ManageCars = () => {
                         : null,
                     }))
                   }
-                  style={inputStyle}
+                  style={styles.input}
                 />
               </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <label style={{ width: "100px", textAlign: "right" }}>
-                  Daily Rate:
-                </label>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Daily Rate:</label>
                 <input
                   type="number"
                   value={newCar.DailyRate ?? ""}
@@ -349,15 +481,11 @@ const ManageCars = () => {
                         : null,
                     }))
                   }
-                  style={inputStyle}
+                  style={styles.input}
                 />
               </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <label style={{ width: "100px", textAlign: "right" }}>
-                  Branch ID:
-                </label>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Branch ID:</label>
                 <input
                   type="number"
                   value={newCar.BranchID ?? ""}
@@ -369,41 +497,31 @@ const ManageCars = () => {
                         : null,
                     }))
                   }
-                  style={inputStyle}
+                  style={styles.input}
                 />
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "10px",
-                  justifyContent: "flex-end",
-                  marginTop: "20px",
-                }}
-              >
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Status:</label>
+                <select
+                  value={newCar.Status}
+                  onChange={(e) =>
+                    setNewCar((prev) => ({ ...prev, Status: e.target.value }))
+                  }
+                  style={styles.select}
+                >
+                  <option value="available">Available</option>
+                  <option value="maintenance">Maintenance</option>
+                  <option value="not_available">Not Available</option>
+                </select>
+              </div>
+              <div style={styles.modalButtons}>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#f44336",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
+                  style={styles.cancelButton}
                 >
                   Cancel
                 </button>
-                <button
-                  onClick={handleAddCar}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#4CAF50",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                >
+                <button onClick={handleAddCar} style={styles.submitButton}>
                   Add Car
                 </button>
               </div>
@@ -413,31 +531,8 @@ const ManageCars = () => {
       )}
 
       {isReservationsModalOpen && selectedCar && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              width: "80%",
-              maxWidth: "1000px",
-              maxHeight: "80vh",
-              overflow: "auto",
-            }}
-          >
+        <div style={styles.modal}>
+          <div style={styles.modalContent}>
             <div
               style={{
                 display: "flex",
@@ -446,120 +541,123 @@ const ManageCars = () => {
                 marginBottom: "20px",
               }}
             >
-              <h2>
+              <h2 style={styles.modalHeader}>
                 Reservations for {selectedCar.Brand} {selectedCar.Model}
               </h2>
               <button
                 onClick={() => setIsReservationsModalOpen(false)}
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#f44336",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
+                style={{ ...styles.actionButton, ...styles.deleteButton }}
               >
                 Close
               </button>
             </div>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ backgroundColor: "#9beeff" }}>
-                  <th style={cellStyle}>Reservation ID</th>
-                  <th style={cellStyle}>Customer ID</th>
-                  <th style={cellStyle}>Start Date</th>
-                  <th style={cellStyle}>End Date</th>
-                  <th style={cellStyle}>Pickup Branch ID</th>
-                  <th style={cellStyle}>Return Branch ID</th>
-                </tr>
-              </thead>
-              <tbody>
-                {carReservations.map((reservation) => (
-                  <tr key={reservation.ReservationID}>
-                    <td style={cellStyle}>{reservation.ReservationID}</td>
-                    <td style={cellStyle}>{reservation.CustomerID}</td>
-                    <td style={cellStyle}>{reservation.StartDate}</td>
-                    <td style={cellStyle}>{reservation.EndDate}</td>
-                    <td style={cellStyle}>{reservation.PickupBranchID}</td>
-                    <td style={cellStyle}>{reservation.ReturnBranchID}</td>
+            <div style={{ overflowX: "auto" }}>
+              <table style={styles.modalTable}>
+                <thead>
+                  <tr>
+                    <th style={{ ...styles.modalTableHeader, width: "15%" }}>
+                      Reservation ID
+                    </th>
+                    <th style={{ ...styles.modalTableHeader, width: "15%" }}>
+                      Customer ID
+                    </th>
+                    <th style={{ ...styles.modalTableHeader, width: "20%" }}>
+                      Start Date
+                    </th>
+                    <th style={{ ...styles.modalTableHeader, width: "20%" }}>
+                      End Date
+                    </th>
+                    <th style={{ ...styles.modalTableHeader, width: "15%" }}>
+                      Pickup Branch
+                    </th>
+                    <th style={{ ...styles.modalTableHeader, width: "15%" }}>
+                      Return Branch
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {carReservations.map((reservation) => (
+                    <tr key={reservation.ReservationID}>
+                      <td style={styles.modalTableCell}>
+                        {reservation.ReservationID}
+                      </td>
+                      <td style={styles.modalTableCell}>
+                        {reservation.CustomerID}
+                      </td>
+                      <td style={styles.modalTableCell}>
+                        {reservation.StartDate}
+                      </td>
+                      <td style={styles.modalTableCell}>
+                        {reservation.EndDate}
+                      </td>
+                      <td style={styles.modalTableCell}>
+                        {reservation.PickupBranchID}
+                      </td>
+                      <td style={styles.modalTableCell}>
+                        {reservation.ReturnBranchID}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
-      <table
-        style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}
-      >
+      <table style={styles.table}>
         <thead>
-          <tr style={{ backgroundColor: "#9beeff" }}>
-            <th style={cellStyle}>Car ID</th>
-            <th style={cellStyle}>Brand</th>
-            <th style={cellStyle}>Model</th>
-            <th style={cellStyle}>Year</th>
-            <th style={cellStyle}>Transmission</th>
-            <th style={cellStyle}>Fuel Type</th>
-            <th style={cellStyle}>Passengers</th>
-            <th style={cellStyle}>Daily Rate</th>
-            <th style={cellStyle}>Status</th>
-            <th style={cellStyle}>Branch (ID)</th>
-            <th style={cellStyle}></th>
+          <tr>
+            <th style={styles.tableHeader}>Car ID</th>
+            <th style={styles.tableHeader}>Brand</th>
+            <th style={styles.tableHeader}>Model</th>
+            <th style={styles.tableHeader}>Year</th>
+            <th style={styles.tableHeader}>Transmission</th>
+            <th style={styles.tableHeader}>Fuel Type</th>
+            <th style={styles.tableHeader}>Passengers</th>
+            <th style={styles.tableHeader}>Daily Rate</th>
+            <th style={styles.tableHeader}>Status</th>
+            <th style={styles.tableHeader}>Branch (ID)</th>
+            <th style={styles.tableHeader}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {cars.map((res: any) => (
-            <tr key={res.CarID}>
-              <td style={cellStyle}>{res.CarID}</td>
-              <td style={cellStyle}>{res.Brand}</td>
-              <td style={cellStyle}>{res.Model}</td>
-              <td style={cellStyle}>{res.Year}</td>
-              <td style={cellStyle}>{res.Transmission}</td>
-              <td style={cellStyle}>{res.Fuel}</td>
-              <td style={cellStyle}>{res.Passengers}</td>
-              <td style={cellStyle}>${res.DailyRate}</td>
-              <td style={cellStyle}>
+          {cars.map((car) => (
+            <tr key={car.CarID} style={styles.tableRow}>
+              <td style={styles.tableCell}>{car.CarID}</td>
+              <td style={styles.tableCell}>{car.Brand}</td>
+              <td style={styles.tableCell}>{car.Model}</td>
+              <td style={styles.tableCell}>{car.Year}</td>
+              <td style={styles.tableCell}>{car.Transmission}</td>
+              <td style={styles.tableCell}>{car.Fuel}</td>
+              <td style={styles.tableCell}>{car.Passengers}</td>
+              <td style={styles.tableCell}>${car.DailyRate}</td>
+              <td style={styles.tableCell}>
                 <select
-                  value={res.Status}
+                  value={car.Status}
                   onChange={(e) =>
-                    handleStatusChange(res.CarID, e.target.value)
+                    handleStatusChange(car.CarID, e.target.value)
                   }
+                  style={styles.select}
                 >
                   <option value="available">Available</option>
                   <option value="maintenance">Maintenance</option>
                   <option value="not_available">Not Available</option>
                 </select>
               </td>
-              <td style={cellStyle}>
-                {res.BranchName} ({res.BranchID})
+              <td style={styles.tableCell}>
+                {car.BranchName} ({car.BranchID})
               </td>
-              <td style={cellStyle}>
+              <td style={styles.tableCell}>
                 <button
-                  onClick={() => handleViewReservations(res)}
-                  style={{
-                    padding: "5px 10px",
-                    backgroundColor: "#2196F3",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    marginRight: "10px",
-                  }}
+                  onClick={() => handleViewReservations(car)}
+                  style={{ ...styles.actionButton, ...styles.viewButton }}
                 >
                   View Reservations
                 </button>
                 <button
-                  onClick={() => handleDelete(res.CarID)}
-                  style={{
-                    padding: "5px 10px",
-                    backgroundColor: "#f44336",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
+                  onClick={() => handleDelete(car.CarID)}
+                  style={{ ...styles.actionButton, ...styles.deleteButton }}
                 >
                   Delete
                 </button>
@@ -570,18 +668,6 @@ const ManageCars = () => {
       </table>
     </div>
   );
-};
-
-const cellStyle: React.CSSProperties = {
-  padding: "10px",
-  border: "1px solid black",
-};
-
-const inputStyle: React.CSSProperties = {
-  padding: "8px",
-  borderRadius: "4px",
-  border: "1px solid #ccc",
-  fontSize: "14px",
 };
 
 export default ManageCars;

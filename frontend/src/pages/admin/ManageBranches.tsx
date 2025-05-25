@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
 import useAuthGuard from "../../hooks/authGuard";
+import { useNavigate } from "react-router-dom";
 
 const ManageBranches = () => {
   useAuthGuard("admin");
+  const navigate = useNavigate();
 
   type Branch = {
     BranchID: number;
@@ -131,13 +133,44 @@ const ManageBranches = () => {
   };
 
   return (
-    <div style={{ padding: "0 50px" }}>
+    <div
+      style={{
+        padding: "20px 50px",
+        backgroundColor: "#ecf0f1",
+        minHeight: "100vh",
+      }}
+    >
+      <button
+        onClick={() => navigate("/admin/AdminDashboard")}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "20px",
+          padding: "8px 15px",
+          backgroundColor: "#3498db",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "14px",
+          transition: "background-color 0.3s ease",
+          zIndex: 1000,
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#2980b9")}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#3498db")}
+      >
+        Back to Dashboard
+      </button>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "20px",
+          marginBottom: "30px",
+          padding: "20px",
+          backgroundColor: "#1e3a5f",
+          borderRadius: "8px",
+          color: "#ffffff",
         }}
       >
         <h1>Manage Branches</h1>
@@ -145,11 +178,12 @@ const ManageBranches = () => {
           onClick={() => setIsModalOpen(true)}
           style={{
             padding: "10px 20px",
-            backgroundColor: "#4CAF50",
+            backgroundColor: "#27ae60",
             color: "white",
             border: "none",
             borderRadius: "4px",
             cursor: "pointer",
+            transition: "all 0.3s ease",
           }}
         >
           Add New Branch
@@ -174,20 +208,29 @@ const ManageBranches = () => {
           <div
             style={{
               backgroundColor: "white",
-              padding: "20px",
+              padding: "30px",
               borderRadius: "8px",
               width: "400px",
               maxWidth: "90%",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
             }}
           >
-            <h2>Add New Branch</h2>
+            <h2 style={{ color: "#1e3a5f", marginBottom: "20px" }}>
+              Add New Branch
+            </h2>
             <div
               style={{ display: "flex", flexDirection: "column", gap: "15px" }}
             >
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <label style={{ width: "100px", textAlign: "right" }}>
+                <label
+                  style={{
+                    width: "100px",
+                    textAlign: "right",
+                    color: "#2c3e50",
+                  }}
+                >
                   Name:
                 </label>
                 <input
@@ -196,13 +239,25 @@ const ManageBranches = () => {
                   onChange={(e) =>
                     setNewBranch((prev) => ({ ...prev, Name: e.target.value }))
                   }
-                  style={inputStyle}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: "4px",
+                    border: "1px solid #7f8c8d",
+                    fontSize: "14px",
+                    flex: 1,
+                  }}
                 />
               </div>
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <label style={{ width: "100px", textAlign: "right" }}>
+                <label
+                  style={{
+                    width: "100px",
+                    textAlign: "right",
+                    color: "#2c3e50",
+                  }}
+                >
                   Phone:
                 </label>
                 <input
@@ -211,13 +266,25 @@ const ManageBranches = () => {
                   onChange={(e) =>
                     setNewBranch((prev) => ({ ...prev, Phone: e.target.value }))
                   }
-                  style={inputStyle}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: "4px",
+                    border: "1px solid #7f8c8d",
+                    fontSize: "14px",
+                    flex: 1,
+                  }}
                 />
               </div>
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <label style={{ width: "100px", textAlign: "right" }}>
+                <label
+                  style={{
+                    width: "100px",
+                    textAlign: "right",
+                    color: "#2c3e50",
+                  }}
+                >
                   Address:
                 </label>
                 <input
@@ -229,7 +296,13 @@ const ManageBranches = () => {
                       Address: e.target.value,
                     }))
                   }
-                  style={inputStyle}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: "4px",
+                    border: "1px solid #7f8c8d",
+                    fontSize: "14px",
+                    flex: 1,
+                  }}
                 />
               </div>
               <div
@@ -244,11 +317,12 @@ const ManageBranches = () => {
                   onClick={() => setIsModalOpen(false)}
                   style={{
                     padding: "8px 16px",
-                    backgroundColor: "#f44336",
+                    backgroundColor: "#7f8c8d",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
                     cursor: "pointer",
+                    transition: "all 0.3s ease",
                   }}
                 >
                   Cancel
@@ -257,11 +331,12 @@ const ManageBranches = () => {
                   onClick={handleAddBranch}
                   style={{
                     padding: "8px 16px",
-                    backgroundColor: "#4CAF50",
+                    backgroundColor: "#27ae60",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
                     cursor: "pointer",
+                    transition: "all 0.3s ease",
                   }}
                 >
                   Add Branch
@@ -290,12 +365,13 @@ const ManageBranches = () => {
           <div
             style={{
               backgroundColor: "white",
-              padding: "20px",
+              padding: "30px",
               borderRadius: "8px",
               width: "80%",
-              maxWidth: "1000px",
+              maxWidth: "1200px",
               maxHeight: "80vh",
               overflow: "auto",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
             }}
           >
             <div
@@ -306,85 +382,371 @@ const ManageBranches = () => {
                 marginBottom: "20px",
               }}
             >
-              <h2>Cars at {selectedBranch.Name}</h2>
+              <h2 style={{ color: "#1e3a5f" }}>
+                Cars at {selectedBranch.Name}
+              </h2>
               <button
                 onClick={() => setIsCarsModalOpen(false)}
                 style={{
                   padding: "8px 16px",
-                  backgroundColor: "#f44336",
+                  backgroundColor: "#e74c3c",
                   color: "white",
                   border: "none",
                   borderRadius: "4px",
                   cursor: "pointer",
+                  transition: "all 0.3s ease",
                 }}
               >
                 Close
               </button>
             </div>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ backgroundColor: "#9beeff" }}>
-                  <th style={cellStyle}>Car ID</th>
-                  <th style={cellStyle}>Brand</th>
-                  <th style={cellStyle}>Model</th>
-                  <th style={cellStyle}>Year</th>
-                  <th style={cellStyle}>Transmission</th>
-                  <th style={cellStyle}>Fuel</th>
-                  <th style={cellStyle}>Passengers</th>
-                  <th style={cellStyle}>Daily Rate</th>
-                  <th style={cellStyle}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {branchCars.map((car) => (
-                  <tr key={car.CarID}>
-                    <td style={cellStyle}>{car.CarID}</td>
-                    <td style={cellStyle}>{car.Brand}</td>
-                    <td style={cellStyle}>{car.Model}</td>
-                    <td style={cellStyle}>{car.Year}</td>
-                    <td style={cellStyle}>{car.Transmission}</td>
-                    <td style={cellStyle}>{car.Fuel}</td>
-                    <td style={cellStyle}>{car.Passengers}</td>
-                    <td style={cellStyle}>${car.DailyRate}</td>
-                    <td style={cellStyle}>{car.Status}</td>
+            <div style={{ overflowX: "auto" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  backgroundColor: "#ffffff",
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style={{
+                        backgroundColor: "#2c3e50",
+                        color: "#ffffff",
+                        padding: "15px",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1e3a5f",
+                      }}
+                    >
+                      Car ID
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#2c3e50",
+                        color: "#ffffff",
+                        padding: "15px",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1e3a5f",
+                      }}
+                    >
+                      Brand
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#2c3e50",
+                        color: "#ffffff",
+                        padding: "15px",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1e3a5f",
+                      }}
+                    >
+                      Model
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#2c3e50",
+                        color: "#ffffff",
+                        padding: "15px",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1e3a5f",
+                      }}
+                    >
+                      Year
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#2c3e50",
+                        color: "#ffffff",
+                        padding: "15px",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1e3a5f",
+                      }}
+                    >
+                      Transmission
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#2c3e50",
+                        color: "#ffffff",
+                        padding: "15px",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1e3a5f",
+                      }}
+                    >
+                      Fuel
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#2c3e50",
+                        color: "#ffffff",
+                        padding: "15px",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1e3a5f",
+                      }}
+                    >
+                      Passengers
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#2c3e50",
+                        color: "#ffffff",
+                        padding: "15px",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1e3a5f",
+                      }}
+                    >
+                      Daily Rate
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#2c3e50",
+                        color: "#ffffff",
+                        padding: "15px",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1e3a5f",
+                      }}
+                    >
+                      Status
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {branchCars.map((car) => (
+                    <tr key={car.CarID}>
+                      <td
+                        style={{
+                          padding: "12px 15px",
+                          borderBottom: "1px solid #ecf0f1",
+                          color: "#2c3e50",
+                          textAlign: "center",
+                        }}
+                      >
+                        {car.CarID}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 15px",
+                          borderBottom: "1px solid #ecf0f1",
+                          color: "#2c3e50",
+                          textAlign: "center",
+                        }}
+                      >
+                        {car.Brand}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 15px",
+                          borderBottom: "1px solid #ecf0f1",
+                          color: "#2c3e50",
+                          textAlign: "center",
+                        }}
+                      >
+                        {car.Model}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 15px",
+                          borderBottom: "1px solid #ecf0f1",
+                          color: "#2c3e50",
+                          textAlign: "center",
+                        }}
+                      >
+                        {car.Year}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 15px",
+                          borderBottom: "1px solid #ecf0f1",
+                          color: "#2c3e50",
+                          textAlign: "center",
+                        }}
+                      >
+                        {car.Transmission}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 15px",
+                          borderBottom: "1px solid #ecf0f1",
+                          color: "#2c3e50",
+                          textAlign: "center",
+                        }}
+                      >
+                        {car.Fuel}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 15px",
+                          borderBottom: "1px solid #ecf0f1",
+                          color: "#2c3e50",
+                          textAlign: "center",
+                        }}
+                      >
+                        {car.Passengers}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 15px",
+                          borderBottom: "1px solid #ecf0f1",
+                          color: "#2c3e50",
+                          textAlign: "center",
+                        }}
+                      >
+                        ${car.DailyRate}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 15px",
+                          borderBottom: "1px solid #ecf0f1",
+                          color: "#2c3e50",
+                          textAlign: "center",
+                        }}
+                      >
+                        {car.Status}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
       <table
-        style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          backgroundColor: "#ffffff",
+          borderRadius: "8px",
+          overflow: "hidden",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        }}
       >
         <thead>
-          <tr style={{ backgroundColor: "#9beeff" }}>
-            <th style={cellStyle}>Branch ID</th>
-            <th style={cellStyle}>Name</th>
-            <th style={cellStyle}>Phone</th>
-            <th style={cellStyle}>Address</th>
-            <th style={cellStyle}></th>
+          <tr>
+            <th
+              style={{
+                backgroundColor: "#2c3e50",
+                color: "#ffffff",
+                padding: "15px",
+                textAlign: "center",
+                borderBottom: "2px solid #1e3a5f",
+              }}
+            >
+              Branch ID
+            </th>
+            <th
+              style={{
+                backgroundColor: "#2c3e50",
+                color: "#ffffff",
+                padding: "15px",
+                textAlign: "center",
+                borderBottom: "2px solid #1e3a5f",
+              }}
+            >
+              Name
+            </th>
+            <th
+              style={{
+                backgroundColor: "#2c3e50",
+                color: "#ffffff",
+                padding: "15px",
+                textAlign: "center",
+                borderBottom: "2px solid #1e3a5f",
+              }}
+            >
+              Phone
+            </th>
+            <th
+              style={{
+                backgroundColor: "#2c3e50",
+                color: "#ffffff",
+                padding: "15px",
+                textAlign: "center",
+                borderBottom: "2px solid #1e3a5f",
+              }}
+            >
+              Address
+            </th>
+            <th
+              style={{
+                backgroundColor: "#2c3e50",
+                color: "#ffffff",
+                padding: "15px",
+                textAlign: "center",
+                borderBottom: "2px solid #1e3a5f",
+              }}
+            >
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
           {branches.map((res: any) => (
             <tr key={res.BranchID}>
-              <td style={cellStyle}>{res.BranchID}</td>
-              <td style={cellStyle}>{res.Name}</td>
-              <td style={cellStyle}>{res.Phone}</td>
-              <td style={cellStyle}>{res.Address}</td>
-              <td style={cellStyle}>
+              <td
+                style={{
+                  padding: "12px 15px",
+                  borderBottom: "1px solid #ecf0f1",
+                  color: "#2c3e50",
+                  textAlign: "center",
+                }}
+              >
+                {res.BranchID}
+              </td>
+              <td
+                style={{
+                  padding: "12px 15px",
+                  borderBottom: "1px solid #ecf0f1",
+                  color: "#2c3e50",
+                  textAlign: "center",
+                }}
+              >
+                {res.Name}
+              </td>
+              <td
+                style={{
+                  padding: "12px 15px",
+                  borderBottom: "1px solid #ecf0f1",
+                  color: "#2c3e50",
+                  textAlign: "center",
+                }}
+              >
+                {res.Phone}
+              </td>
+              <td
+                style={{
+                  padding: "12px 15px",
+                  borderBottom: "1px solid #ecf0f1",
+                  color: "#2c3e50",
+                  textAlign: "center",
+                }}
+              >
+                {res.Address}
+              </td>
+              <td
+                style={{
+                  padding: "12px 15px",
+                  borderBottom: "1px solid #ecf0f1",
+                  color: "#2c3e50",
+                  textAlign: "center",
+                }}
+              >
                 <button
                   onClick={() => handleViewCars(res)}
                   style={{
-                    padding: "5px 10px",
-                    backgroundColor: "#2196F3",
+                    padding: "8px 12px",
+                    backgroundColor: "#3498db",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
                     cursor: "pointer",
-                    marginRight: "10px",
+                    marginRight: "8px",
+                    transition: "all 0.3s ease",
                   }}
                 >
                   View Cars
@@ -392,12 +754,13 @@ const ManageBranches = () => {
                 <button
                   onClick={() => handleDelete(res.BranchID)}
                   style={{
-                    padding: "5px 10px",
-                    backgroundColor: "#f44336",
+                    padding: "8px 12px",
+                    backgroundColor: "#e74c3c",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
                     cursor: "pointer",
+                    transition: "all 0.3s ease",
                   }}
                 >
                   Delete
@@ -409,18 +772,6 @@ const ManageBranches = () => {
       </table>
     </div>
   );
-};
-
-const cellStyle: React.CSSProperties = {
-  padding: "10px",
-  border: "1px solid black",
-};
-
-const inputStyle: React.CSSProperties = {
-  padding: "8px",
-  borderRadius: "4px",
-  border: "1px solid #ccc",
-  fontSize: "14px",
 };
 
 export default ManageBranches;

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
 import useAuthGuard from "../../hooks/authGuard";
+import { useNavigate } from "react-router-dom";
 
 const Reservations = () => {
   useAuthGuard("customer");
+  const navigate = useNavigate();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cars, setCars] = useState<Car[]>([]);
@@ -33,6 +35,8 @@ const Reservations = () => {
   type Reservation = {
     ReservationID: number;
     CarID: number;
+    Brand: string;
+    Model: string;
     StartDate: string;
     EndDate: string;
     PickupBranchID: number;
@@ -163,13 +167,44 @@ const Reservations = () => {
   };
 
   return (
-    <div style={{ padding: "0 50px" }}>
+    <div
+      style={{
+        padding: "20px 50px",
+        backgroundColor: "#ecf0f1",
+        minHeight: "100vh",
+      }}
+    >
+      <button
+        onClick={() => navigate("/customer/CustomerDashboard")}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "20px",
+          padding: "8px 15px",
+          backgroundColor: "#3498db",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "14px",
+          transition: "background-color 0.3s ease",
+          zIndex: 1000,
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#2980b9")}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#3498db")}
+      >
+        Back to Dashboard
+      </button>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "20px",
+          marginBottom: "30px",
+          padding: "20px",
+          backgroundColor: "#1e3a5f",
+          borderRadius: "8px",
+          color: "#ffffff",
         }}
       >
         <h1>Reservations</h1>
@@ -177,12 +212,19 @@ const Reservations = () => {
           onClick={() => setIsModalOpen(true)}
           style={{
             padding: "10px 20px",
-            backgroundColor: "#4CAF50",
+            backgroundColor: "#27ae60",
             color: "white",
             border: "none",
             borderRadius: "4px",
             cursor: "pointer",
+            transition: "all 0.3s ease",
           }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = "#219a52")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "#27ae60")
+          }
         >
           Add New Reservation
         </button>
@@ -206,20 +248,29 @@ const Reservations = () => {
           <div
             style={{
               backgroundColor: "white",
-              padding: "20px",
+              padding: "30px",
               borderRadius: "8px",
               width: "400px",
               maxWidth: "90%",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
             }}
           >
-            <h2>Add New Reservation</h2>
+            <h2 style={{ color: "#1e3a5f", marginBottom: "20px" }}>
+              Add New Reservation
+            </h2>
             <div
               style={{ display: "flex", flexDirection: "column", gap: "15px" }}
             >
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <label style={{ width: "100px", textAlign: "right" }}>
+                <label
+                  style={{
+                    width: "100px",
+                    textAlign: "right",
+                    color: "#2c3e50",
+                  }}
+                >
                   Car:
                 </label>
                 <select
@@ -246,7 +297,13 @@ const Reservations = () => {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <label style={{ width: "100px", textAlign: "right" }}>
+                <label
+                  style={{
+                    width: "100px",
+                    textAlign: "right",
+                    color: "#2c3e50",
+                  }}
+                >
                   Start Date:
                 </label>
                 <input
@@ -265,7 +322,13 @@ const Reservations = () => {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <label style={{ width: "100px", textAlign: "right" }}>
+                <label
+                  style={{
+                    width: "100px",
+                    textAlign: "right",
+                    color: "#2c3e50",
+                  }}
+                >
                   End Date:
                 </label>
                 <input
@@ -284,7 +347,13 @@ const Reservations = () => {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <label style={{ width: "100px", textAlign: "right" }}>
+                <label
+                  style={{
+                    width: "100px",
+                    textAlign: "right",
+                    color: "#2c3e50",
+                  }}
+                >
                   Pickup Branch:
                 </label>
                 <select
@@ -309,7 +378,13 @@ const Reservations = () => {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <label style={{ width: "100px", textAlign: "right" }}>
+                <label
+                  style={{
+                    width: "100px",
+                    textAlign: "right",
+                    color: "#2c3e50",
+                  }}
+                >
                   Return Branch:
                 </label>
                 <select
@@ -334,7 +409,13 @@ const Reservations = () => {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <label style={{ width: "100px", textAlign: "right" }}>
+                <label
+                  style={{
+                    width: "100px",
+                    textAlign: "right",
+                    color: "#2c3e50",
+                  }}
+                >
                   Package:
                 </label>
                 <select
@@ -368,12 +449,19 @@ const Reservations = () => {
                   onClick={() => setIsModalOpen(false)}
                   style={{
                     padding: "8px 16px",
-                    backgroundColor: "#f44336",
+                    backgroundColor: "#e74c3c",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
                     cursor: "pointer",
+                    transition: "all 0.3s ease",
                   }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#c0392b")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#e74c3c")
+                  }
                 >
                   Cancel
                 </button>
@@ -381,12 +469,19 @@ const Reservations = () => {
                   onClick={handleAddReservation}
                   style={{
                     padding: "8px 16px",
-                    backgroundColor: "#4CAF50",
+                    backgroundColor: "#27ae60",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
                     cursor: "pointer",
+                    transition: "all 0.3s ease",
                   }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#219a52")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#27ae60")
+                  }
                 >
                   Add Reservation
                 </button>
@@ -400,48 +495,58 @@ const Reservations = () => {
         style={{
           width: "100%",
           borderCollapse: "collapse",
-          marginTop: "20px",
+          backgroundColor: "#ffffff",
+          borderRadius: "8px",
+          overflow: "hidden",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         }}
       >
         <thead>
-          <tr style={{ backgroundColor: "#9beeff" }}>
-            <th style={cellStyle}>Reservation ID</th>
-            <th style={cellStyle}>Brand</th>
-            <th style={cellStyle}>Model</th>
-            <th style={cellStyle}>Start Date</th>
-            <th style={cellStyle}>End Date</th>
-            <th style={cellStyle}>Pickup Branch</th>
-            <th style={cellStyle}>Return Branch</th>
-            <th style={cellStyle}>Package ID</th>
-            <th style={cellStyle}>Total Days</th>
-            <th style={cellStyle}>Cost</th>
-            <th style={cellStyle}></th>
+          <tr>
+            <th style={tableHeaderStyle}>Reservation ID</th>
+            <th style={tableHeaderStyle}>Brand</th>
+            <th style={tableHeaderStyle}>Model</th>
+            <th style={tableHeaderStyle}>Start Date</th>
+            <th style={tableHeaderStyle}>End Date</th>
+            <th style={tableHeaderStyle}>Pickup Branch</th>
+            <th style={tableHeaderStyle}>Return Branch</th>
+            <th style={tableHeaderStyle}>Package ID</th>
+            <th style={tableHeaderStyle}>Total Days</th>
+            <th style={tableHeaderStyle}>Cost</th>
+            <th style={tableHeaderStyle}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {reservations.map((res: any) => (
-            <tr key={res.ReservationID}>
-              <td style={cellStyle}>{res.ReservationID}</td>
-              <td style={cellStyle}>{res.Brand}</td>
-              <td style={cellStyle}>{res.Model}</td>
-              <td style={cellStyle}>{res.StartDate}</td>
-              <td style={cellStyle}>{res.EndDate}</td>
-              <td style={cellStyle}>{res.PickupBranchName}</td>
-              <td style={cellStyle}>{res.ReturnBranchName}</td>
-              <td style={cellStyle}>{res.PackageID}</td>
-              <td style={cellStyle}>{res.TotalDays}</td>
-              <td style={cellStyle}>${res.Cost}</td>
-              <td style={cellStyle}>
+          {reservations.map((reservation) => (
+            <tr key={reservation.ReservationID}>
+              <td style={tableCellStyle}>{reservation.ReservationID}</td>
+              <td style={tableCellStyle}>{reservation.Brand}</td>
+              <td style={tableCellStyle}>{reservation.Model}</td>
+              <td style={tableCellStyle}>{reservation.StartDate}</td>
+              <td style={tableCellStyle}>{reservation.EndDate}</td>
+              <td style={tableCellStyle}>{reservation.PickupBranchName}</td>
+              <td style={tableCellStyle}>{reservation.ReturnBranchName}</td>
+              <td style={tableCellStyle}>{reservation.PackageID}</td>
+              <td style={tableCellStyle}>{reservation.TotalDays}</td>
+              <td style={tableCellStyle}>${reservation.Cost}</td>
+              <td style={tableCellStyle}>
                 <button
-                  onClick={() => handleDelete(res.ReservationID)}
+                  onClick={() => handleDelete(reservation.ReservationID)}
                   style={{
-                    padding: "5px 10px",
-                    backgroundColor: "#f44336",
+                    padding: "8px 12px",
+                    backgroundColor: "#e74c3c",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
                     cursor: "pointer",
+                    transition: "all 0.3s ease",
                   }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#c0392b")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#e74c3c")
+                  }
                 >
                   Delete
                 </button>
@@ -454,17 +559,29 @@ const Reservations = () => {
   );
 };
 
-const cellStyle: React.CSSProperties = {
-  padding: "10px",
-  border: "1px solid black",
+const tableHeaderStyle: React.CSSProperties = {
+  backgroundColor: "#2c3e50",
+  color: "#ffffff",
+  padding: "15px",
+  textAlign: "center",
+  borderBottom: "2px solid #1e3a5f",
+};
+
+const tableCellStyle: React.CSSProperties = {
+  padding: "12px 15px",
+  borderBottom: "1px solid #ecf0f1",
+  color: "#2c3e50",
+  textAlign: "center",
 };
 
 const inputStyle: React.CSSProperties = {
   padding: "8px",
   borderRadius: "4px",
-  border: "1px solid #ccc",
+  border: "1px solid #7f8c8d",
   fontSize: "14px",
   width: "200px",
+  color: "#2c3e50",
+  backgroundColor: "#ffffff",
 };
 
 export default Reservations;

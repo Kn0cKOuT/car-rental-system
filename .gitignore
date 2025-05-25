@@ -8,7 +8,6 @@
 # Always ignore these no matter what
 node_modules/
 reports/
-frontend/
 
 # Environment variables
 .env
@@ -21,3 +20,5 @@ frontend/
 # Build files
 dist/
 build/
+
+/backend/*.yml

@@ -1,13 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
-const { allowRoles } = require('../middleware/authMiddleware');
+const { verifyToken, allowRoles } = require('../middleware/authMiddleware');
+
+router.use(verifyToken);
 
 router.get('/customers', allowRoles('admin'), (req, res) => {
     const sql = `
-        SELECT *
-        FROM CUSTOMER
-        ORDER BY CustomerID;
+        SELECT 
+            c.*,
+            COUNT(r.ReservationID) as TotalReservations
+        FROM CUSTOMER c
+        LEFT JOIN RESERVATION r ON c.CustomerID = r.CustomerID
+        GROUP BY c.CustomerID
+        ORDER BY c.CustomerID;
     `;
     db.query(sql, (err, result) => {
         if (err) { 
@@ -19,9 +25,23 @@ router.get('/customers', allowRoles('admin'), (req, res) => {
 
 router.get('/reservations', allowRoles('admin'), (req, res) => {
     const sql = `
-        SELECT *
-        FROM RESERVATION
-        ORDER BY CustomerID;
+        SELECT 
+            r.ReservationID,
+            r.CarID,
+            r.CustomerID,
+            DATE_FORMAT(r.StartDate, '%d-%m-%Y') as StartDate,
+            DATE_FORMAT(r.EndDate, '%d-%m-%Y') as EndDate,
+            r.PickupBranchID,
+            r.ReturnBranchID,
+            r.PackageID,
+            r.TotalDays,
+            r.Cost,
+            b.Name as PickupBranchName,
+            b2.Name as ReturnBranchName
+        FROM RESERVATION AS r
+        JOIN BRANCH AS b ON r.PickupBranchID = b.BranchID
+        JOIN BRANCH AS b2 ON r.ReturnBranchID = b2.BranchID
+        ORDER BY r.ReservationID;
     `;
 
     db.query(sql, (err, result) => {
@@ -108,10 +128,32 @@ router.delete('/branches/:id', allowRoles('admin'), (req, res) => {
 
 router.get('/cars', allowRoles('admin'), (req, res) => {
     const sql = `
-        SELECT c.CarID, c.Model, c.Year, c.DailyRate, c.Status, C.BranchID, r.StartDate, r.EndDate
+        SELECT 
+            c.CarID,
+            c.Brand,
+            c.Model,
+            c.Year,
+            c.Transmission,
+            c.Fuel,
+            c.Passengers,
+            c.DailyRate,
+            c.Status,
+            c.BranchID,
+            b.Name as BranchName,
+            r.ReservationID,
+            DATE_FORMAT(r.StartDate, '%d-%m-%Y') as StartDate,
+            DATE_FORMAT(r.EndDate, '%d-%m-%Y') as EndDate
         FROM CAR AS c
-        LEFT JOIN Reservation AS r ON c.CarID = r.CarID
-        ORDER BY c.CarID, r.StartDate;
+        LEFT JOIN BRANCH AS b ON c.BranchID = b.BranchID
+        LEFT JOIN (
+            SELECT r1.*
+            FROM RESERVATION r1
+            LEFT JOIN RESERVATION r2
+            ON r1.CarID = r2.CarID 
+            AND r1.StartDate < r2.StartDate
+            WHERE r2.CarID IS NULL
+        ) r ON c.CarID = r.CarID
+        ORDER BY c.CarID;
     `;
 
     db.query(sql, (err, result) => {
@@ -237,6 +279,82 @@ router.put('/cars/:id/status', allowRoles('admin'), (req, res) => {
             return res.status(404).json({ error: "Car not found" });
         }
         res.json({ message: "Car status updated successfully" });
+    });
+});
+
+router.get('/branches/:id/cars', allowRoles('admin'), (req, res) => {
+    const branchId = req.params.id;
+    const sql = `
+        SELECT 
+            c.CarID,
+            c.Brand,
+            c.Model,
+            c.Year,
+            c.Transmission,
+            c.Fuel,
+            c.Passengers,
+            c.DailyRate,
+            c.Status
+        FROM CAR As c
+        WHERE c.BranchID = ?
+        ORDER BY c.CarID;
+    `;
+
+    db.query(sql, [branchId], (err, result) => {
+        if (err) { 
+            return res.status(500).json({ error: err });
+        }
+        res.json(result);
+    });
+});
+
+router.get('/cars/:id/reservations', allowRoles('admin'), (req, res) => {
+    const carId = req.params.id;
+    const sql = `
+        SELECT 
+            r.ReservationID,
+            r.CustomerID,
+            DATE_FORMAT(r.StartDate, '%d-%m-%Y') as StartDate,
+            DATE_FORMAT(r.EndDate, '%d-%m-%Y') as EndDate,
+            r.PickupBranchID,
+            r.ReturnBranchID
+        FROM Reservation As r
+        WHERE r.CarID = ?
+        ORDER BY r.ReservationID;
+    `;
+
+    db.query(sql, [carId], (err, result) => {
+        if (err) { 
+            return res.status(500).json({ error: err });
+        }
+        res.json(result);
+    });
+});
+
+router.get('/customers/:id/reservations', allowRoles('admin'), (req, res) => {
+    const customerId = req.params.id;
+    const sql = `
+        SELECT 
+            r.ReservationID,
+            r.CarID,
+            DATE_FORMAT(r.StartDate, '%d-%m-%Y') as StartDate,
+            DATE_FORMAT(r.EndDate, '%d-%m-%Y') as EndDate,
+            r.PickupBranchID,
+            r.ReturnBranchID,
+            b.Name as PickupBranchName,
+            b2.Name as ReturnBranchName
+        FROM Reservation As r
+        JOIN Branch As b ON r.PickupBranchID = b.BranchID
+        JOIN Branch As b2 ON r.ReturnBranchID = b2.BranchID
+        WHERE r.CustomerID = ?
+        ORDER BY r.ReservationID;
+    `;
+
+    db.query(sql, [customerId], (err, result) => {
+        if (err) { 
+            return res.status(500).json({ error: err });
+        }
+        res.json(result);
     });
 });
 

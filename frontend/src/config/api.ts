@@ -4,9 +4,7 @@ import axios from 'axios';
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 // Base URL configuration
-const BASE_URL = isDevelopment 
-  ? 'http://localhost:5000'  // Local development
-  : process.env.REACT_APP_API_URL || 'http://localhost:5000'; // Production or ngrok URL
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // fallback for local dev
 
 // Create axios instance with default config
 const api = axios.create({

@@ -144,155 +144,432 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username </label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-          {errors.username && (
-            <div style={{ color: "red", fontSize: "12px" }}>
-              {errors.username}
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#ecf0f1",
+        padding: "40px 20px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "800px",
+          width: "100%",
+          backgroundColor: "#ffffff",
+          padding: "40px",
+          borderRadius: "10px",
+          boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+        }}
+      >
+        <h1
+          style={{
+            textAlign: "center",
+            color: "#1e3a5f",
+            marginBottom: "30px",
+            fontSize: "2.5rem",
+          }}
+        >
+          Register
+        </h1>
+        <form onSubmit={handleSubmit}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "30px",
+              marginBottom: "30px",
+            }}
+          >
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
+              {errors.username && (
+                <div
+                  style={{
+                    color: "#e74c3c",
+                    fontSize: "12px",
+                    marginTop: "8px",
+                  }}
+                >
+                  {errors.username}
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <br />
-        <div>
-          <label>Password </label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          {errors.password && (
-            <div style={{ color: "red", fontSize: "12px" }}>
-              {errors.password}
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
+              {errors.password && (
+                <div
+                  style={{
+                    color: "#e74c3c",
+                    fontSize: "12px",
+                    marginTop: "8px",
+                  }}
+                >
+                  {errors.password}
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <br />
-        <div>
-          {" "}
-          <label>First Name </label>
-          <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <br />
-        <div>
-          <label>Last Name </label>
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <br />
-        <div>
-          <label>Email </label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          {errors.email && (
-            <div style={{ color: "red", fontSize: "12px" }}>{errors.email}</div>
-          )}
-        </div>
-        <br />
-        <div>
-          <label>Phone </label>
-          <input
-            type="text"
-            name="phone"
-            placeholder="5XXXXXXXXX"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-          {errors.phone && (
-            <div style={{ color: "red", fontSize: "12px" }}>{errors.phone}</div>
-          )}
-        </div>
-        <br />
-        <div>
-          <label>Driver License No </label>
-          <input
-            type="text"
-            name="driverLicenseNo"
-            value={formData.driverLicenseNo}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <br />
-        <div>
-          <label>Credit Card Number </label>
-          <input
-            type="text"
-            name="creditCardNumber"
-            placeholder="XXXX XXXX XXXX XXXX"
-            value={formData.creditCardNumber}
-            onChange={handleChange}
-            maxLength={19}
-            required
-          />
-          {errors.creditCardNumber && (
-            <div style={{ color: "red", fontSize: "12px" }}>
-              {errors.creditCardNumber}
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                First Name
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
             </div>
-          )}
-        </div>
-        <br />
-        <div>
-          <label>Expiration Date </label>
-          <input
-            type="text"
-            name="expDate"
-            placeholder="MM/YY"
-            value={formData.expDate}
-            onChange={handleChange}
-            required
-          />
-          {errors.expDate && (
-            <div style={{ color: "red", fontSize: "12px" }}>
-              {errors.expDate}
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                Last Name
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
             </div>
-          )}
-        </div>
-        <br />
-        <div>
-          <label>CVV </label>
-          <input
-            type="text"
-            name="cvv"
-            value={formData.cvv}
-            onChange={handleChange}
-            required
-          />
-          {errors.cvv && (
-            <div style={{ color: "red", fontSize: "12px" }}>{errors.cvv}</div>
-          )}
-        </div>
-        <br />
-        <button type="submit">Register</button>
-      </form>
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
+              {errors.email && (
+                <div
+                  style={{
+                    color: "#e74c3c",
+                    fontSize: "12px",
+                    marginTop: "8px",
+                  }}
+                >
+                  {errors.email}
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                Phone
+              </label>
+              <input
+                type="text"
+                name="phone"
+                placeholder="5XXXXXXXXX"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
+              {errors.phone && (
+                <div
+                  style={{
+                    color: "#e74c3c",
+                    fontSize: "12px",
+                    marginTop: "8px",
+                  }}
+                >
+                  {errors.phone}
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                Driver License No
+              </label>
+              <input
+                type="text"
+                name="driverLicenseNo"
+                value={formData.driverLicenseNo}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                Credit Card Number
+              </label>
+              <input
+                type="text"
+                name="creditCardNumber"
+                placeholder="XXXX XXXX XXXX XXXX"
+                value={formData.creditCardNumber}
+                onChange={handleChange}
+                maxLength={19}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
+              {errors.creditCardNumber && (
+                <div
+                  style={{
+                    color: "#e74c3c",
+                    fontSize: "12px",
+                    marginTop: "8px",
+                  }}
+                >
+                  {errors.creditCardNumber}
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                Expiration Date
+              </label>
+              <input
+                type="text"
+                name="expDate"
+                placeholder="MM/YY"
+                value={formData.expDate}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
+              {errors.expDate && (
+                <div
+                  style={{
+                    color: "#e74c3c",
+                    fontSize: "12px",
+                    marginTop: "8px",
+                  }}
+                >
+                  {errors.expDate}
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  color: "#7f8c8d",
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                }}
+              >
+                CVV
+              </label>
+              <input
+                type="text"
+                name="cvv"
+                value={formData.cvv}
+                onChange={handleChange}
+                required
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "5px",
+                  border: "1px solid #7f8c8d",
+                  fontSize: "16px",
+                  color: "#2c3e50",
+                }}
+              />
+              {errors.cvv && (
+                <div
+                  style={{
+                    color: "#e74c3c",
+                    fontSize: "12px",
+                    marginTop: "8px",
+                  }}
+                >
+                  {errors.cvv}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div style={{ marginTop: "30px", textAlign: "center" }}>
+            <button
+              type="submit"
+              style={{
+                padding: "15px 30px",
+                fontSize: "1.1rem",
+                backgroundColor: "#1e3a5f",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                transition: "background-color 0.3s ease",
+              }}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.backgroundColor = "#152a45")
+              }
+              onMouseOut={(e) =>
+                (e.currentTarget.style.backgroundColor = "#1e3a5f")
+              }
+            >
+              Register
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

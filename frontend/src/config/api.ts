@@ -60,6 +60,7 @@ export const authAPI = {
   login: (credentials: { username: string; password: string }) => {
   return api.post('/api/auth/login', credentials);
   }
+ 
 };
 
 export default api; 

@@ -1,11 +1,23 @@
-# Node.js
-node_modules
+# Ignore everything by default
+*
+
+# But do NOT ignore this folder:
+!backend/
+!backend/**
+
+# Always ignore these no matter what
+node_modules/
+reports/
+frontend/
+
+# Environment variables
 .env
-logs
-.log
+.env.local
+.env.*.local
 
-# Systemeditor junk
-.DS_Store
-.vscode
-.idea
+# Logs
+*.log
 
+# Build files
+dist/
+build/

@@ -40,8 +40,11 @@ function NavbarWrapper() {
     };
   }, []);
 
-  // Show DefaultNavbar on login and register pages
-  if (location.pathname === "/login" || location.pathname === "/register") {
+  if (
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname === "/home"
+  ) {
     return <DefaultNavbar />;
   }
 

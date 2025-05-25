@@ -29,8 +29,8 @@ router.get('/reservations', allowRoles('admin'), (req, res) => {
             r.ReservationID,
             r.CarID,
             r.CustomerID,
-            DATE_FORMAT(r.StartDate, '%d-%m-%Y') as StartDate,
-            DATE_FORMAT(r.EndDate, '%d-%m-%Y') as EndDate,
+            DATE_FORMAT(r.StartDate, '%Y-%m-%d') as StartDate,
+            DATE_FORMAT(r.EndDate, '%Y-%m-%d') as EndDate,
             r.PickupBranchID,
             r.ReturnBranchID,
             r.PackageID,
@@ -141,8 +141,8 @@ router.get('/cars', allowRoles('admin'), (req, res) => {
             c.BranchID,
             b.Name as BranchName,
             r.ReservationID,
-            DATE_FORMAT(r.StartDate, '%d-%m-%Y') as StartDate,
-            DATE_FORMAT(r.EndDate, '%d-%m-%Y') as EndDate
+            DATE_FORMAT(r.StartDate, '%Y-%m-%d') as StartDate,
+            DATE_FORMAT(r.EndDate, '%Y-%m-%d') as EndDate
         FROM CAR AS c
         LEFT JOIN BRANCH AS b ON c.BranchID = b.BranchID
         LEFT JOIN (
@@ -185,21 +185,40 @@ router.post('/cars', allowRoles('admin'), (req, res) => {
 router.delete('/cars/:id', allowRoles('admin'), (req, res) => {
     const carId = req.params.id;
 
-    const sql=`
-        DELETE
-        FROM CAR
+    const checkCarQuery = `
+        SELECT COUNT(*) as count
+        FROM RESERVATION
         WHERE CarID = ?
     `;
-    db.query(sql, [carId], (err, result) => {
-        if (err) { 
+
+    db.query(checkCarQuery, [carId], (err, result) => {
+        if (err) {
             return res.status(500).json({ error: err });
         }
 
-        if(result.affectedRows === 0){
-            return res.status(404).json({ error: "Car not found." })
+        if (result[0].count > 0) {
+            return res.status(400).json({ 
+                error: "Cannot delete car. It is being used in existing reservations." 
+            });
         }
 
-        res.json({ message: "Car deleted"});
+        const deleteQuery = `
+            DELETE
+            FROM CAR
+            WHERE CarID = ?
+        `;
+
+        db.query(deleteQuery, [carId], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: err });
+            }
+
+            if(result.affectedRows === 0) {
+                return res.status(404).json({ error: "Car not found." });
+            }
+
+            res.json({ message: "Car deleted successfully" });
+        });
     });
 });
 
@@ -239,21 +258,40 @@ router.post('/packages', allowRoles('admin'), (req, res) => {
 router.delete('/packages/:id', allowRoles('admin'), (req, res) => {
     const packageId = req.params.id;
 
-    const sql=`
-        DELETE
-        FROM INSURANCE
+    const checkPackageQuery = `
+        SELECT COUNT(*) as count
+        FROM RESERVATION
         WHERE PackageID = ?
     `;
-    db.query(sql, [packageId], (err, result) => {
-        if (err) { 
+
+    db.query(checkPackageQuery, [packageId], (err, result) => {
+        if (err) {
             return res.status(500).json({ error: err });
         }
 
-        if(result.affectedRows === 0){
-            return res.status(404).json({ error: "Package not found." })
+        if (result[0].count > 0) {
+            return res.status(400).json({ 
+                error: "Cannot delete package. It is being used in existing reservations." 
+            });
         }
 
-        res.json({ message: "Package deleted"});
+        const deleteQuery = `
+            DELETE
+            FROM INSURANCE
+            WHERE PackageID = ?
+        `;
+
+        db.query(deleteQuery, [packageId], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: err });
+            }
+
+            if(result.affectedRows === 0) {
+                return res.status(404).json({ error: "Package not found." });
+            }
+
+            res.json({ message: "Package deleted successfully" });
+        });
     });
 });
 
@@ -314,8 +352,8 @@ router.get('/cars/:id/reservations', allowRoles('admin'), (req, res) => {
         SELECT 
             r.ReservationID,
             r.CustomerID,
-            DATE_FORMAT(r.StartDate, '%d-%m-%Y') as StartDate,
-            DATE_FORMAT(r.EndDate, '%d-%m-%Y') as EndDate,
+            DATE_FORMAT(r.StartDate, '%Y-%m-%d') as StartDate,
+            DATE_FORMAT(r.EndDate, '%Y-%m-%d') as EndDate,
             r.PickupBranchID,
             r.ReturnBranchID
         FROM Reservation As r
@@ -337,8 +375,8 @@ router.get('/customers/:id/reservations', allowRoles('admin'), (req, res) => {
         SELECT 
             r.ReservationID,
             r.CarID,
-            DATE_FORMAT(r.StartDate, '%d-%m-%Y') as StartDate,
-            DATE_FORMAT(r.EndDate, '%d-%m-%Y') as EndDate,
+            DATE_FORMAT(r.StartDate, '%Y-%m-%d') as StartDate,
+            DATE_FORMAT(r.EndDate, '%Y-%m-%d') as EndDate,
             r.PickupBranchID,
             r.ReturnBranchID,
             b.Name as PickupBranchName,

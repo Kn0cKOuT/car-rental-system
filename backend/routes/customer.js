@@ -221,7 +221,7 @@ router.get('/cars/:id/reservations', allowRoles('customer'), (req, res) => {
     const carId = req.params.id;
 
     const sql = `
-        SELECT DATE_FORMAT(StartDate, '%d-%m-%Y') as StartDate, DATE_FORMAT(EndDate, '%d-%m-%Y') as EndDate
+        SELECT DATE_FORMAT(StartDate, '%Y-%m-%d') as StartDate, DATE_FORMAT(EndDate, '%Y-%m-%d') as EndDate
         FROM Reservation
         WHERE CarID = ?
     `;
@@ -241,8 +241,8 @@ router.get('/reservations', allowRoles('customer'), (req, res) => {
         SELECT 
             r.ReservationID,
             r.CarID,
-            DATE_FORMAT(r.StartDate, '%d-%m-%Y') as StartDate,
-            DATE_FORMAT(r.EndDate, '%d-%m-%Y') as EndDate,
+            DATE_FORMAT(r.StartDate, '%Y-%m-%d') as StartDate,
+            DATE_FORMAT(r.EndDate, '%Y-%m-%d') as EndDate,
             r.PickupBranchID,
             r.ReturnBranchID,
             r.PackageID,

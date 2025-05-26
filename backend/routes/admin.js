@@ -396,4 +396,19 @@ router.get('/customers/:id/reservations', allowRoles('admin'), (req, res) => {
     });
 });
 
+router.get('/admins', allowRoles('admin'), (req, res) => {
+    const sql = `
+        SELECT AdminID, Username
+        FROM Admin
+        ORDER BY AdminID;
+    `;
+    
+    db.query(sql, (err, result) => {
+        if (err) { 
+            return res.status(500).json({ error: err });
+        }
+        res.json(result);
+    });
+});
+
 module.exports = router;

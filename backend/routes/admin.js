@@ -303,20 +303,39 @@ router.put('/cars/:id/status', allowRoles('admin'), (req, res) => {
         return res.status(400).json({ error: "Invalid status. Must be 'available', 'maintenance', or 'not_available'" });
     }
 
-    const sql = `
-        UPDATE Car 
-        SET Status = ? 
+
+    const checkReservationQuery = `
+        SELECT COUNT(*) as count
+        FROM RESERVATION
         WHERE CarID = ?
     `;
 
-    db.query(sql, [status, carId], (err, result) => {
+    db.query(checkReservationQuery, [carId], (err, result) => {
         if (err) {
             return res.status(500).json({ error: err });
         }
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: "Car not found" });
+
+        if (result[0].count > 0) {
+            return res.status(400).json({ 
+                error: "Cannot change status. Car is currently in a reservation." 
+            });
         }
-        res.json({ message: "Car status updated successfully" });
+
+        const updateQuery = `
+            UPDATE Car 
+            SET Status = ? 
+            WHERE CarID = ?
+        `;
+
+        db.query(updateQuery, [status, carId], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: err });
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ error: "Car not found" });
+            }
+            res.json({ message: "Car status updated successfully" });
+        });
     });
 });
 

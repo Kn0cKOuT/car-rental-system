@@ -19,6 +19,7 @@ import ManageBranches from "./pages/admin/ManageBranches";
 import ManageCustomers from "./pages/admin/ManageCustomers";
 import ManageReservations from "./pages/admin/ManageReservations";
 import ManagePackages from "./pages/admin/ManagePackages";
+import ManageAdmin from "./pages/admin/ManageAdmin";
 import Cars from "./pages/customer/Cars";
 import Reservations from "./pages/customer/Reservations";
 import Branches from "./pages/customer/Branches";
@@ -43,9 +44,10 @@ function NavbarWrapper() {
   if (
     location.pathname === "/login" ||
     location.pathname === "/register" ||
-    location.pathname === "/home"
+    location.pathname === "/home" ||
+    location.pathname === "/"
   ) {
-    return <DefaultNavbar />;
+    return null;
   }
 
   return (
@@ -80,6 +82,7 @@ function App() {
             element={<ManageReservations />}
           />
           <Route path="/admin/ManagePackages" element={<ManagePackages />} />
+          <Route path="/admin/ManageAdmin" element={<ManageAdmin />} />
           <Route path="/customer/Cars" element={<Cars />} />
           <Route path="/customer/Reservations" element={<Reservations />} />
           <Route path="/customer/Branches" element={<Branches />} />

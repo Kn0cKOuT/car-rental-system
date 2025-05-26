@@ -120,13 +120,21 @@ const Reservations = () => {
     }
   };
 
+  const handleCarSelect = (carId: string) => {
+    const selectedCar = cars.find((car) => car.CarID === parseInt(carId));
+    setNewReservation((prev) => ({
+      ...prev,
+      carId: carId,
+      pickupBranchId: selectedCar ? selectedCar.BranchID.toString() : "",
+    }));
+  };
+
   const handleAddReservation = async () => {
     try {
       if (
         !newReservation.carId ||
         !newReservation.startDate ||
         !newReservation.endDate ||
-        !newReservation.pickupBranchId ||
         !newReservation.returnBranchId ||
         !newReservation.packageId
       ) {
@@ -275,12 +283,7 @@ const Reservations = () => {
                 </label>
                 <select
                   value={newReservation.carId}
-                  onChange={(e) =>
-                    setNewReservation((prev) => ({
-                      ...prev,
-                      carId: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => handleCarSelect(e.target.value)}
                   style={inputStyle}
                 >
                   <option value="">Select a car</option>
@@ -356,23 +359,17 @@ const Reservations = () => {
                 >
                   Pickup Branch:
                 </label>
-                <select
-                  value={newReservation.pickupBranchId}
-                  onChange={(e) =>
-                    setNewReservation((prev) => ({
-                      ...prev,
-                      pickupBranchId: e.target.value,
-                    }))
+                <input
+                  type="text"
+                  value={
+                    branches.find(
+                      (b) =>
+                        b.BranchID === parseInt(newReservation.pickupBranchId)
+                    )?.Name || "Select a car first"
                   }
-                  style={inputStyle}
-                >
-                  <option value="">Select pickup branch</option>
-                  {branches.map((branch) => (
-                    <option key={branch.BranchID} value={branch.BranchID}>
-                      {branch.Name}
-                    </option>
-                  ))}
-                </select>
+                  disabled
+                  style={{ ...inputStyle, backgroundColor: "#f5f5f5" }}
+                />
               </div>
 
               <div

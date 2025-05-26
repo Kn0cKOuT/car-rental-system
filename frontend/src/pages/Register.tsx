@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { authAPI } from "../config/api";
 import { useNavigate } from "react-router-dom";
-// register sonra login ekranına yönlendirir
+
 const Register = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -158,6 +158,7 @@ const Register = () => {
         const response = await authAPI.registerCustomer(formData);
         console.log("Registration successful:", response);
         alert("Registration successful");
+        navigate("/login");
       } catch (error: any) {
         const raw = error.response?.data?.error;
         const message = typeof raw === "string" ? raw : JSON.stringify(raw);

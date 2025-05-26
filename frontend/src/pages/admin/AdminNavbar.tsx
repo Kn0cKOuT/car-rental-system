@@ -13,7 +13,7 @@ const AdminNavbar = () => {
   };
 
   const navItemStyle = (isHovered: boolean) => ({
-    width: "20%",
+    width: "16.66%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -71,14 +71,22 @@ const AdminNavbar = () => {
       </Link>
       <Link
         to="/admin/ManagePackages"
-        style={{
-          ...navItemStyle(hoveredItem === "packages"),
-          borderRight: "none",
-        }}
+        style={navItemStyle(hoveredItem === "packages")}
         onMouseEnter={() => setHoveredItem("packages")}
         onMouseLeave={() => setHoveredItem(null)}
       >
         Packages
+      </Link>
+      <Link
+        to="/admin/ManageAdmin"
+        style={{
+          ...navItemStyle(hoveredItem === "admin"),
+          borderRight: "none",
+        }}
+        onMouseEnter={() => setHoveredItem("admin")}
+        onMouseLeave={() => setHoveredItem(null)}
+      >
+        Admins
       </Link>
       <div
         style={{

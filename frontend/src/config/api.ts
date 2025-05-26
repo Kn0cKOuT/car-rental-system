@@ -1,12 +1,9 @@
 import axios from 'axios';
 
-// Get the current environment
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-// Base URL configuration
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // fallback for local dev
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-// Create axios instance with default config
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -14,7 +11,6 @@ const api = axios.create({
   },
 });
 
-// Add request interceptor for authentication
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -34,6 +30,9 @@ export const adminAPI = {
           username,
           password,
         });
+    },
+    getAdmins: () => {
+        return api.get('/api/admin/admins');
     }
 };
 

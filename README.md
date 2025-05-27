@@ -32,7 +32,7 @@ car-rental-system/
 - Node.js (v18+)
 - MySQL (Workbench or XAMPP)
 - npm
-- `ngrok` (optional, for public access)
+- `cloudflare` (optional, for public access)
 
 ---
 
@@ -120,7 +120,7 @@ Use the generated HTTPS URL in your frontend `api.ts` config to allow real-world
 ## ✅ Features
 
 - Admin:
-  - Add/edit/delete cars
+  - Add/delete cars
   - View all reservations
 - Customer:
   - Browse available cars
@@ -132,9 +132,8 @@ Use the generated HTTPS URL in your frontend `api.ts` config to allow real-world
 
 ## 📌 Notes
 
-- Never commit `.env` or database credentials
 - Ensure MySQL is running (via Workbench or XAMPP)
-- Compatible with free deployment via ngrok or VPS
+- Compatible with free deployment via cloudflare or VPS
 
 ---
 

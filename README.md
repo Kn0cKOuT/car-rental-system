@@ -100,9 +100,9 @@ It will run on: `http://localhost:3000`
 
 ---
 
-### 4. **Optional: Make Backend Public with ngrok**
+### 4. **Optional: Make Backend Public with cloudflare**
 ```bash
-ngrok http 3001
+\cloudflare -url http://localhost:3001/
 ```
 
 Use the generated HTTPS URL in your frontend `api.ts` config to allow real-world testing.

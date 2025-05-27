@@ -9,9 +9,10 @@ router.get('/reservations/:id', allowRoles('customer'), (req, res) => {
     const customerId = req.params.id;
 
     const sql = `
-    SELECT * 
-    FROM Reservation 
-    WHERE CustomerID = ?`;
+        SELECT * 
+        FROM Reservation 
+        WHERE CustomerID = ?
+    `;
     db.query(sql, [customerId], (err, result) => {
         if (err) return res.status(500).json({ error: err });
         res.json(result);

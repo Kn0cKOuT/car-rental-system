@@ -291,7 +291,7 @@ const Reservations = () => {
                     .filter((car) => car.Status === "available")
                     .map((car) => (
                       <option key={car.CarID} value={car.CarID}>
-                        {car.Brand} {car.Model} - ${car.DailyRate}/day
+                        {car.Brand} {car.Model} - ₺{car.DailyRate}/day
                       </option>
                     ))}
                 </select>
@@ -428,7 +428,7 @@ const Reservations = () => {
                   <option value="">Select a package</option>
                   {packages.map((pkg) => (
                     <option key={pkg.PackageID} value={pkg.PackageID}>
-                      {pkg.Name} - ${pkg.DailyCost}/day
+                      {pkg.Name} - ₺{pkg.DailyCost}/day
                     </option>
                   ))}
                 </select>
@@ -525,7 +525,7 @@ const Reservations = () => {
               <td style={tableCellStyle}>{reservation.ReturnBranchName}</td>
               <td style={tableCellStyle}>{reservation.PackageID}</td>
               <td style={tableCellStyle}>{reservation.TotalDays}</td>
-              <td style={tableCellStyle}>${reservation.Cost}</td>
+              <td style={tableCellStyle}>₺{reservation.Cost}</td>
               <td style={tableCellStyle}>
                 <button
                   onClick={() => handleDelete(reservation.ReservationID)}

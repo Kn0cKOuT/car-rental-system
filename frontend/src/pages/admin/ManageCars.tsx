@@ -631,7 +631,7 @@ const ManageCars = () => {
               <td style={styles.tableCell}>{car.Transmission}</td>
               <td style={styles.tableCell}>{car.Fuel}</td>
               <td style={styles.tableCell}>{car.Passengers}</td>
-              <td style={styles.tableCell}>${car.DailyRate}</td>
+              <td style={styles.tableCell}>₺{car.DailyRate}</td>
               <td style={styles.tableCell}>
                 <select
                   value={car.Status}

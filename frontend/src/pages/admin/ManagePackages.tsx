@@ -423,7 +423,7 @@ const ManagePackages = () => {
                   textAlign: "center",
                 }}
               >
-                ${res.DailyCost}
+                ₺{res.DailyCost}
               </td>
               <td
                 style={{

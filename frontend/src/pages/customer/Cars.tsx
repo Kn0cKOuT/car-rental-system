@@ -23,7 +23,6 @@ const Cars = () => {
     EndDate?: string;
   };
 
-  // Bir müşteri bir arabayı bir rezervasyondan sonra kiralamak isterse o rezervasyonun bitşindeki şubeden almak zorunda!!!
   type Reservation = {
     StartDate: string;
     EndDate: string;
@@ -231,7 +230,7 @@ const Cars = () => {
               <td style={tableCellStyle}>{car.Transmission}</td>
               <td style={tableCellStyle}>{car.Fuel}</td>
               <td style={tableCellStyle}>{car.Passengers}</td>
-              <td style={tableCellStyle}>${car.DailyRate}</td>
+              <td style={tableCellStyle}>₺{car.DailyRate}</td>
               <td style={tableCellStyle}>{car.Status}</td>
               <td style={tableCellStyle}>
                 {car.BranchName} ({car.BranchID})

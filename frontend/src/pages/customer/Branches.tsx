@@ -196,7 +196,7 @@ const Branches = () => {
                       <td style={tableCellStyle}>{car.Transmission}</td>
                       <td style={tableCellStyle}>{car.Fuel}</td>
                       <td style={tableCellStyle}>{car.Passengers}</td>
-                      <td style={tableCellStyle}>${car.DailyRate}</td>
+                      <td style={tableCellStyle}>₺{car.DailyRate}</td>
                       <td style={tableCellStyle}>{car.Status}</td>
                     </tr>
                   ))}

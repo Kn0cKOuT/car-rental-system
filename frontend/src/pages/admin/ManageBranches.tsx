@@ -595,7 +595,7 @@ const ManageBranches = () => {
                           textAlign: "center",
                         }}
                       >
-                        ${car.DailyRate}
+                        ₺{car.DailyRate}
                       </td>
                       <td
                         style={{

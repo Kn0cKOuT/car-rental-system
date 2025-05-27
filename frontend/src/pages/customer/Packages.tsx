@@ -97,7 +97,7 @@ const Packages = () => {
               <td style={tableCellStyle}>{pkg.PackageID}</td>
               <td style={tableCellStyle}>{pkg.PackageName}</td>
               <td style={tableCellStyle}>{pkg.Description}</td>
-              <td style={tableCellStyle}>${pkg.DailyCost}</td>
+              <td style={tableCellStyle}>₺{pkg.DailyCost}</td>
             </tr>
           ))}
         </tbody>

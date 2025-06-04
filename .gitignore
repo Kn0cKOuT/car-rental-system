@@ -7,7 +7,6 @@
 
 # Always ignore these no matter what
 node_modules/
-reports/
 
 # Environment variables
 .env
